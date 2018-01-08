@@ -4,7 +4,7 @@ import logger from 'koa-logger'
 import koaRouter from 'koa-router'
 import koaBodyparser from 'koa-bodyparser'
 
-import appList from './routes/appList'
+import movieList from './routes/movieList'
 
 const app = new Koa()
 const router = koaRouter()
@@ -24,7 +24,7 @@ app.on('error', function (err, ctx) {
   console.log('server error', err)
 })
 
-router.use('/appList', appList.routes())
+router.use('/movieList', movieList.routes())
 
 app.use(router.routes())
 

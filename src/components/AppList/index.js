@@ -1,28 +1,20 @@
 import React, { Component } from 'react'
-import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import * as actions from './actions'
+import { Link } from 'react-router-dom'
 
 class AppList extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      logo: 'http://web-site-files.ashshen.cc/images/chuyin.jpg'
-    }
-  }
-
-  componentDidMount() {
-    this.props.actions.getAppList()
+    this.state = {}
   }
 
   render() {
-    console.log(this.props, 222)
+    const { appList } = this.props.reducer
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={this.state.logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
+      {appList.map((item, index) =>
+        <Link key={index} to={item.link}>{ item.name }</Link>
+      )}
       </div>
     );
   }
@@ -34,10 +26,4 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators(actions, dispatch)
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(AppList)
+export default connect(mapStateToProps)(AppList)

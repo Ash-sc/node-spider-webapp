@@ -28,7 +28,7 @@ const xhr = ({ method = 'get', url, body = null }) => {
         const errorInfo = data.errorInfo || '处理错误'
         return reject(errorInfo)
       }
-      resolve(data || {})
+      resolve(data.data || {})
     }).catch(() => {
       reject('请求失败')
     })
