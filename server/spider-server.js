@@ -13,7 +13,7 @@ app.use(koaBodyparser())
 app.use(json())
 app.use(logger())
 
-app.use(async function (ctx, next) {
+app.use(async function(ctx, next) {
   let start = new Date()
   await next()
   let ms = new Date() - start
