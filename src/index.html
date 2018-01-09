@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Spider App</title>
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+  <meta name="renderer" content="webkit">
+  <!-- build:css static/bundle/plugins.css -->
+  <!-- endbuild -->
+  {% for (var css in o.htmlWebpackPlugin.files.css) { %}
+  <link href="{%=o.htmlWebpackPlugin.files.css[css] %}" rel="stylesheet">
+  {% } %}
+</head>
+<body>
+
+  <div id="app"></div>
+
+<!-- build:js static/bundle/plugins.js -->
+<script src="static/plugins/moment.min.js"></script>
+<script src="static/plugins/axios.min.js"></script>
+<!-- endbuild -->
+{% for (var chunk in o.htmlWebpackPlugin.files.chunks) { %}
+<script src="{%=o.htmlWebpackPlugin.files.chunks[chunk].entry %}"></script>
+{% } %}
+</body>
+</html>
