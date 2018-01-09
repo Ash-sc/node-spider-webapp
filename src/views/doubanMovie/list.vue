@@ -2,8 +2,11 @@
   <div class="movie-list-section">
     <ul class="movie-list">
       <li v-for="(item, index) in nowPlayingList" :key="index" class="movie-item">
+        <div class="movie-star">
+          <span class="score">{{ item.score || '0.0' }}</span>
+        </div>
         <img
-          :src="'http://olo3fohgk.bkt.clouddn.com/images/bg.png'"
+          :src="item.image"
           :alt="item.name"
           class="movie-image"
         />
