@@ -17,7 +17,7 @@ const xhr = ({ method = 'get', url, body = null }) => {
   const promise = new Promise((resolve, reject) => {
     const reqPath = rootPath + url + (method === 'get' ? queryString(body) : '')
     axios({
-      method: 'post', // 所有请求都用post
+      method,
       url: reqPath,
       data: body
     }).then(res => {
@@ -26,7 +26,7 @@ const xhr = ({ method = 'get', url, body = null }) => {
         const errorInfo = data.errorInfo || '处理错误'
         return reject(errorInfo)
       }
-      resolve(data || {})
+      resolve(data.data || {})
     }).catch(() => {
       reject('请求失败')
     })

@@ -5,6 +5,8 @@
   "main": "index.js",
   "dependencies": {
     "axios": "^0.16.2",
+    "babel-preset-env": "^1.6.1",
+    "cheerio": "^1.0.0-rc.2",
     "es6-shim": "^0.35.2",
     "express": "^4.13.3",
     "koa": "^2.4.1",
@@ -14,6 +16,7 @@
     "koa-router": "^7.3.0",
     "lodash": "^4.17.2",
     "moment": "^2.20.1",
+    "superagent": "^3.8.2",
     "vue": "^2.4.2",
     "vue-loader": "^8.0.0",
     "vue-router": "^2.4.0",
