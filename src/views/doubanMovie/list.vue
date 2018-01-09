@@ -22,6 +22,7 @@
         @click="getMovieList(item.type)"
       >{{ item.name }}</li>
     </ul>
+    <spider-loading v-show="isLoading"></spider-loading>
   </div>
 </template>
 <script>
@@ -45,26 +46,31 @@ export default {
       catetogyList: [
         { name: '正在热映', type: 'nowPlayingList' },
         { name: '即将上映', type: 'willPlayList' }
-      ]
+      ],
+      isLoading: false
     }
   },
 
   methods: {
     getMovieList(type) {
-      if (this.menuType === type) return false
+      const { menuType, isLoading } = this
+      if (menuType === type || isLoading) return false
 
       this.menuType = type
       return this.getListData(type)
     },
 
     getListData(type) {
+      this.isLoading = true
       this.$store.dispatch('GET_MOVIE_LIST', { type }).then(() => {
-        console.log('done!')
+        this.isLoading = false
       })
     }
   },
 
   created() {
+    document.title = 'Movie Spider'
+
     const { menuType, getListData } = this
 
     getListData(menuType)

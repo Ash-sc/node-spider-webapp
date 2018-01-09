@@ -5,6 +5,10 @@ import router from '@/routes/'
 import App from '@/components/App'
 import store from './store'
 
+import Loading from '@/components/loading/index.js'
+
+Vue.use(Loading)
+
 new Vue({
   el: '#app',
   store,
