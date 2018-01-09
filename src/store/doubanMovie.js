@@ -1,12 +1,14 @@
 import axios from '@/services/axios'
 // initial state
 const state = {
-  nowPlayingList: []
+  nowPlayingList: [],
+  willPlayList: []
 }
 
 // getters
 const getters = {
-  nowPlayingList: state => state.nowPlayingList
+  nowPlayingList: state => state.nowPlayingList,
+  willPlayList: state => state.willPlayList
 }
 
 

@@ -9,6 +9,7 @@
     "cheerio": "^1.0.0-rc.2",
     "es6-shim": "^0.35.2",
     "express": "^4.13.3",
+    "html-entities": "^1.2.1",
     "koa": "^2.4.1",
     "koa-bodyparser": "^4.2.0",
     "koa-json": "^2.0.2",

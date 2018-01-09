@@ -1,8 +1,8 @@
 <template>
   <div class="movie-list-section">
     <ul class="movie-list">
-      <li v-for="(item, index) in nowPlayingList" :key="index" class="movie-item">
-        <div class="movie-star">
+      <li v-for="(item, index) in movieList" :key="index" class="movie-item">
+        <div class="movie-star" v-show="menuType === 'nowPlayingList'">
           <span class="score">{{ item.score || '0.0' }}</span>
         </div>
         <img
@@ -14,8 +14,13 @@
       </li>
     </ul>
     <ul class="movie-category">
-      <li class="category-select">正在热映</li>
-      <li class="category-select">即将上映</li>
+      <li
+        v-for="(item, index) in catetogyList"
+        :key="index"
+        class="category-select"
+        :class="{ active: menuType === item.type }"
+        @click="getMovieList(item.type)"
+      >{{ item.name }}</li>
     </ul>
   </div>
 </template>
@@ -25,14 +30,44 @@ import { mapGetters } from 'vuex'
 export default {
   computed: {
     ...mapGetters({
-      nowPlayingList: 'nowPlayingList'
-    })
+      nowPlayingList: 'nowPlayingList',
+      willPlayList: 'willPlayList'
+    }),
+
+    movieList() {
+      return this[this.menuType]
+    }
+  },
+
+  data() {
+    return {
+      menuType: 'nowPlayingList',
+      catetogyList: [
+        { name: '正在热映', type: 'nowPlayingList' },
+        { name: '即将上映', type: 'willPlayList' }
+      ]
+    }
+  },
+
+  methods: {
+    getMovieList(type) {
+      if (this.menuType === type) return false
+
+      this.menuType = type
+      return this.getListData(type)
+    },
+
+    getListData(type) {
+      this.$store.dispatch('GET_MOVIE_LIST', { type }).then(() => {
+        console.log('done!')
+      })
+    }
   },
 
   created() {
-    this.$store.dispatch('GET_MOVIE_LIST', { type: 'nowPlayingList' }).then(() => {
-      console.log('done!')
-    })
+    const { menuType, getListData } = this
+
+    getListData(menuType)
   }
 }
 </script>
