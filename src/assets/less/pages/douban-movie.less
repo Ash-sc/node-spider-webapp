@@ -1,0 +1,82 @@
+.movie-list-section {
+
+  .movie-list {
+    font-size: 0;
+    padding: 2rem 0 3rem 0;
+
+    .movie-item {
+      position: relative;
+      display: inline-block;
+      width: calc(~'50% - .3rem');
+      border-radius: .2rem;
+      overflow: hidden;
+      margin: .2rem;
+
+      .movie-star {
+        position: absolute;
+        width: 3rem;
+        height: 3rem;
+        right: -24px;
+        top: -24px;
+        background: #ff7e00;
+        transform: rotate(45deg);
+      }
+
+      .score {
+        position: absolute;
+        transform: rotate(315deg);
+        bottom: 2px;
+        left: 17px;
+        font-size: .7rem;
+        color: #fff;
+      }
+
+      .movie-image {
+        width: 100%;
+      }
+
+      .movie-name {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 2rem;
+        font-size: 0.7rem;
+        color: #fff;
+        background-color: rgba(109, 108, 108, 0.9);
+        line-height: 2rem;
+        text-indent: .5rem;
+      }
+
+    }
+
+    .movie-item:nth-child(2n-1) {
+      top: -2rem;
+      margin-right: 0;
+    }
+
+  }
+
+  .movie-category {
+    position: fixed;
+    height: 3rem;
+    width: 100%;
+    bottom: 0;
+    background-color: #fff;
+    font-size: 0;
+
+    .category-select {
+      display: inline-block;
+      width: 50%;
+      font-size: .8rem;
+      line-height: 3rem;
+      text-align: center;
+    }
+
+    .active {
+      background-color: rgba(255, 99, 7, 0.76);
+      color: #fff;
+    }
+  }
+
+}
