@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const rootPath = '/api' // 后端 API 根路径
+const rootPath = '/spider-api' // 后端 API 根路径
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
 
 const xhr = ({ method = 'get', url, body = null }) => {
