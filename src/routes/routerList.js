@@ -30,6 +30,12 @@ export default [
             component (resolve) {
               require(['@/views/doubanMovie/list'], resolve)
             }
+          }, {
+            path: '/dou-ban-movie/detail/:id',
+            name: 'dou-ban-movie-detail',
+            component (resolve) {
+              require(['@/views/doubanMovie/detail'], resolve)
+            }
           }
         ]
       }

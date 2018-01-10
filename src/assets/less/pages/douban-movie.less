@@ -1,4 +1,5 @@
-.movie-list-section {
+.page-section {
+  text-align: left;
 
   .movie-list {
     font-size: 0;
@@ -57,7 +58,7 @@
 
   }
 
-  .movie-category {
+  .bottom-tab {
     position: fixed;
     height: 3rem;
     width: 100%;
@@ -77,6 +78,52 @@
       background-color: rgba(255, 99, 7, 0.76);
       color: #fff;
     }
+
+  }
+
+  /********************详情页面***********************/
+  .movie-preview-section {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    padding-top: 56.25%;
+
+    .movie-subject {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-position: 0% 0%;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-image: url('https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2506694509.webp');
+      background-color: #340e11;
+      filter: blur(1rem);
+    }
+
+  }
+
+  .movie-synopsis {
+    padding: .5rem;
+    font-size: .5rem;
+    line-height: 1.2rem;
+    color: #1e1e1e;
+    overflow: hidden;
+    background-color: #fff;
+  }
+
+  .icon-chevron-thin-up {
+    height: 1.5rem;
+    background: #fff;
+    line-height: 1.5rem;
+    text-align: center;
+    font-size: .9rem;
+    cursor: pointer;
+
+    &.show-more {
+      transform: rotate(180deg);
+    }
+
   }
 
 }
