@@ -1,7 +1,12 @@
 <template>
-  <div class="movie-list-section">
+  <div class="page-section">
     <ul class="movie-list">
-      <li v-for="(item, index) in movieList" :key="index" class="movie-item">
+      <li
+        v-for="(item, index) in movieList"
+        :key="index"
+        class="movie-item"
+        @click="showDetail(item.link)"
+      >
         <div class="movie-star" v-show="menuType === 'nowPlayingList'">
           <span class="score">{{ item.score || '0.0' }}</span>
         </div>
@@ -13,7 +18,7 @@
         <span class="movie-name txt-ellipsis">{{ item.name }}</span>
       </li>
     </ul>
-    <ul class="movie-category">
+    <ul class="bottom-tab">
       <li
         v-for="(item, index) in catetogyList"
         :key="index"
@@ -65,6 +70,11 @@ export default {
       this.$store.dispatch('GET_MOVIE_LIST', { type }).then(() => {
         this.isLoading = false
       })
+    },
+
+    showDetail(link) {
+      const id = link.split('/')[4]
+      this.$router.push({ name: 'dou-ban-movie-detail', params: { id } })
     }
   },
 
