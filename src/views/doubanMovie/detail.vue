@@ -16,10 +16,11 @@
         <span class="close-video" @click="toggleVideoShow(false)">+</span>
         <video
           v-if="movieDetail.videoLink"
-          :src="`http://2017017.xyz/spider-api/movieList/get-movie-stream.mp4?link=${movieDetail.videoLink}`"
           controls="controls"
           class="video"
-        ></video>
+        >
+          <source :src="`http://2017017.xyz/spider-api/movieList/get-movie-stream.mp4?link=${movieDetail.videoLink}`" type="video/mp4">
+        </video>
       </div>
     </div>
     <div
