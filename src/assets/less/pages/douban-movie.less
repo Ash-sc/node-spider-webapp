@@ -97,10 +97,36 @@
       top: 0;
       width: 100%;
       height: 100%;
-      background-position: 0% 0%;
-      background-size: cover;
-      background-repeat: no-repeat;
       background-color: #340e11;
+    }
+
+    .video-section {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 100%;
+
+      .close-video {
+        position: absolute;
+        top: .5rem;
+        right: .5rem;
+        width: 1.6rem;
+        height: 1.6rem;
+        border-radius: 1rem;
+        background: rgba(0,0,0,.5);
+        line-height: 1.3rem;
+        text-align: center;
+        transform: rotate(45deg);
+        color: #fff;
+        font-size: 1.6rem;
+        z-index: 20;
+      }
+
+      .video {
+        width: 100%;
+        height: 100%;
+        z-index: 10;
+      }
     }
 
     .movie-img {

@@ -1,6 +1,7 @@
 import koaRouter from 'koa-router'
 import cheerio from 'cheerio'
 import superagent from 'superagent'
+import request from 'request'
 
 const Entities = require('html-entities').XmlEntities
 const router = koaRouter()
@@ -148,6 +149,16 @@ router.get('/detail', async function (ctx) {
     data: typeof result === 'object' ? result : [],
     errorInfo: typeof result === 'object' ? '' : result
   }
+})
+
+router.get('/get-movie-stream.mp4', ctx => {
+  const { link } = ctx.query
+
+  ctx.type = 'application/video'
+  ctx.body = request({
+    method: 'GET',
+    url: link
+  })
 })
 
 export default router

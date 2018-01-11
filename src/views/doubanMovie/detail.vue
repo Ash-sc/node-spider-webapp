@@ -1,7 +1,7 @@
 <template>
   <div class="page-section movie-detail-page">
     <div class="movie-preview-section">
-      <div class="movie-subject">
+      <div class="movie-subject" v-show="!videoShow">
         <img :src="movieDetail.imageLink" class="movie-img" v-show="movieDetail.imageLink">
         <div class="movie-msg" v-show="movieDetail.imageLink">
           <h1 class="txt-ellipsis">{{ movieDetail.name }}</h1>
@@ -9,8 +9,17 @@
           <span class="txt-ellipsis">时长：{{ movieDetail.runTime || '-' }}分钟</span>
           <span class="txt-ellipsis">上映时间：{{ movieDetail.releaseDate || '-' }}</span>
           <span class="txt-ellipsis">评分：{{ movieDetail.score || '-' }}</span>
-          <span>宣传片</span>
+          <span @click="toggleVideoShow(true)">宣传片（戳我！）</span>
         </div>
+      </div>
+      <div class="video-section" v-show="videoShow">
+        <span class="close-video" @click="toggleVideoShow(false)">+</span>
+        <video
+          v-if="movieDetail.videoLink"
+          :src="`http://2017017.xyz:10211/movieList/get-movie-stream.mp4?link=${movieDetail.videoLink}`"
+          controls="controls"
+          class="video"
+        ></video>
       </div>
     </div>
     <div
@@ -44,7 +53,8 @@ export default {
   data() {
     return {
       synopsisType: 'show-more',
-      isLoading: false
+      isLoading: false,
+      videoShow: false
     }
   },
 
@@ -59,6 +69,11 @@ export default {
       const { synopsisType } = this
 
       this.synopsisType = synopsisType === 'show-more' ? 'show-less' : 'show-more'
+    },
+
+    toggleVideoShow(type) {
+      console.log(type, 222)
+      this.videoShow = type
     }
   },
 
