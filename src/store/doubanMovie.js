@@ -28,7 +28,7 @@ const actions = {
   },
 
   GET_MOVIE_DETAIL({ commit, state }, id) {
-    state.movieDetail = {}
+    commit('GET_MOVIE_DETAIL_FAILURE', { err: '' })
     return axios({
       url: '/movieList/detail',
       body: { id }
