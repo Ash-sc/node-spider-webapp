@@ -2,13 +2,15 @@ import axios from '@/services/axios'
 // initial state
 const state = {
   nowPlayingList: [],
-  willPlayList: []
+  willPlayList: [],
+  movieDetail: {}
 }
 
 // getters
 const getters = {
   nowPlayingList: state => state.nowPlayingList,
-  willPlayList: state => state.willPlayList
+  willPlayList: state => state.willPlayList,
+  movieDetail: state => state.movieDetail
 }
 
 
@@ -26,6 +28,7 @@ const actions = {
   },
 
   GET_MOVIE_DETAIL({ commit, state }, id) {
+    commit('GET_MOVIE_DETAIL_FAILURE', { err: '' })
     return axios({
       url: '/movieList/detail',
       body: { id }

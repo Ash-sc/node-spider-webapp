@@ -82,6 +82,10 @@
   }
 
   /********************详情页面***********************/
+  &.movie-detail-page {
+    background-color: #ccc;
+  }
+
   .movie-preview-section {
     position: relative;
     overflow: hidden;
@@ -96,20 +100,53 @@
       background-position: 0% 0%;
       background-size: cover;
       background-repeat: no-repeat;
-      background-image: url('https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2506694509.webp');
       background-color: #340e11;
-      filter: blur(1rem);
+    }
+
+    .movie-img {
+      height: calc(~'100% - 2rem');
+      margin: 1rem .5rem;
+      width: 34%;
+    }
+
+    .movie-msg {
+      position: absolute;
+      left: calc(~'34% + 1rem');
+      top: 0;
+      width: calc(~'66% - 1rem');
+      height: 100%;
+      padding: 1rem .5rem 1rem 0;
+      color: #fff;
+
+      h1 {
+        font-size: 1.4rem;
+        margin-bottom: .6rem;
+        height: 2rem;
+      }
+
+      span {
+        display: block;
+        font-size: .9rem;
+        line-height: 1.8rem;
+      }
+
     }
 
   }
 
   .movie-synopsis {
     padding: .5rem;
-    font-size: .5rem;
+    font-size: .8rem;
     line-height: 1.2rem;
     color: #1e1e1e;
     overflow: hidden;
     background-color: #fff;
+
+    .synopsis-title {
+      margin-left: -0.5rem;
+      font-size: .9rem;
+      margin-bottom: .5rem;
+    }
   }
 
   .icon-chevron-thin-up {
@@ -124,6 +161,35 @@
       transform: rotate(180deg);
     }
 
+  }
+
+  .movie-moment {
+    margin-top: .5rem;
+    padding: 0;
+    background-color: #fff;
+    font-size: .8rem;
+    overflow: hidden;
+
+    .moment-title {
+      margin: .5rem 0;
+      font-size: .9rem;
+    }
+
+    .moment-item {
+      margin-bottom: .5rem;
+      padding: 0 .5rem;
+    }
+
+    .user {
+      color: #7b7b7b;
+      margin-bottom: .2rem;
+    }
+
+    .content {
+      text-indent: 1rem;
+      font-size: .6rem;
+      line-height: 1rem;
+    }
   }
 
 }

@@ -86,7 +86,7 @@ const getMoment = id => {
           $('#comments .comment-item').each((idx, element) => {
             result.push({
               user: entities.decode($(element).find('.comment .comment-info a').html()),
-              content: entities.decode($(element).find('.comment p').html())
+              content: entities.decode($(element).find('.comment p').html()).replace(/<a(\S|\s)+\/a>/g, '')
             })
           })
 
@@ -113,21 +113,19 @@ router.get('/detail', async function (ctx) {
             return sum + '/' + value.children[0].data
           }
           return sum
-        }, '')
+        }, '').substr(1)
         const runTime = $('#info span[property="v:runtime"]').attr('content')
         const releaseDate = Object.values($('#info span[property="v:initialReleaseDate"]')).reduce((sum, value) => {
           if (typeof value.children === 'object') {
             return sum + '/' + value.children[0].data
           }
           return sum
-        }, '')
-        const score = $('#interest_sectl .rating_num')[0].children[0].data
+        }, '').substr(1)
+        const score = $('#interest_sectl .rating_num')[0].children.length && $('#interest_sectl .rating_num')[0].children[0].data
         const synopsis = $('#link-report span[property="v:summary"]')[0].children[0].data.replace(/\s/g, '')
-
+        const imageLink = $('#mainpic .nbgnbg img')[0].attribs.src
         const videoLink =  await getMovieVideo($('.related-pic-video')[0].attribs.href)
-
-        const videoType = videoLink ? videoLink.split('.').pop() : ''
-
+        const videoType = videoLink ? ('video/' + videoLink.split('.').pop()) : ''
         const moment = await getMoment(id)
 
         resolve({
@@ -137,6 +135,7 @@ router.get('/detail', async function (ctx) {
           releaseDate,
           score,
           synopsis,
+          imageLink,
           videoLink,
           videoType,
           moment
