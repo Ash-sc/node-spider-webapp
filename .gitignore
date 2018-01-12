@@ -6,6 +6,8 @@
 /.vscode
 /.idea
 
+*/movieFiles/*
+
 # testing
 /coverage
 

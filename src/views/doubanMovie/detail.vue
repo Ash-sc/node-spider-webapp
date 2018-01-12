@@ -12,14 +12,14 @@
           <span @click="toggleVideoShow(true)">宣传片（戳我！）</span>
         </div>
       </div>
-      <div class="video-section" v-show="videoShow">
+      <div class="video-section" v-if="loadingVideo" v-show="videoShow">
         <span class="close-video" @click="toggleVideoShow(false)">+</span>
         <video
           v-if="movieDetail.videoLink"
           controls="controls"
           class="video"
         >
-          <source :src="`http://2017017.xyz/spider-api/movieList/get-movie-stream.mp4?link=${movieDetail.videoLink}`" type="video/mp4">
+          <source :src="`/spider-api/movieList/get-movie-stream.mp4?id=${movieDetail.id}`" type="video/mp4">
         </video>
       </div>
     </div>
@@ -55,7 +55,8 @@ export default {
     return {
       synopsisType: 'show-more',
       isLoading: false,
-      videoShow: false
+      videoShow: false,
+      loadingVideo: false
     }
   },
 
@@ -73,8 +74,8 @@ export default {
     },
 
     toggleVideoShow(type) {
-      console.log(type, 222)
       this.videoShow = type
+      this.loadingVideo = true
     }
   },
 
