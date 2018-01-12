@@ -16,8 +16,6 @@
   <div id="app"></div>
 
 <!-- build:js static/bundle/plugins.js -->
-<script src="static/plugins/moment.min.js"></script>
-<script src="static/plugins/axios.min.js"></script>
 <!-- endbuild -->
 {% for (var chunk in o.htmlWebpackPlugin.files.chunks) { %}
 <script src="{%=o.htmlWebpackPlugin.files.chunks[chunk].entry %}"></script>

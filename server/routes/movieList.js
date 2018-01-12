@@ -1,10 +1,14 @@
 import koaRouter from 'koa-router'
 import cheerio from 'cheerio'
 import superagent from 'superagent'
+import request from 'request'
 
 const Entities = require('html-entities').XmlEntities
 const router = koaRouter()
 const entities = new Entities()
+
+const fs = require('fs')
+const path = require('path')
 
 router.get('/list', async function (ctx) {
 
@@ -54,7 +58,7 @@ router.get('/list', async function (ctx) {
   }
 })
 
-const getMovieVideo = link => {
+const getMovieVideo = (link, id) => {
   return new Promise((resolve, reject) => {
     superagent
       .get(link)
@@ -64,8 +68,18 @@ const getMovieVideo = link => {
         }
 
         const $ = cheerio.load(res.text)
+        const filePath = path.join(__dirname, '../movieFiles/')
+        const videoLink = $('video source')[0].attribs.src
 
-        resolve($('video source')[0].attribs.src)
+        resolve(videoLink)
+
+        // 缓存宣传片到本地
+        if (!fs.existsSync(filePath)) {
+          fs.mkdirSync(filePath)
+        }
+        if (!fs.existsSync(filePath + id + '.mp4')) {
+          request(videoLink).pipe(fs.createWriteStream(path.join(__dirname, '../movieFiles/' + id + '.mp4')))
+        }
       })
   })
 }
@@ -124,11 +138,11 @@ router.get('/detail', async function (ctx) {
         const score = $('#interest_sectl .rating_num')[0].children.length && $('#interest_sectl .rating_num')[0].children[0].data
         const synopsis = $('#link-report span[property="v:summary"]')[0].children[0].data.replace(/\s/g, '')
         const imageLink = $('#mainpic .nbgnbg img')[0].attribs.src
-        const videoLink =  await getMovieVideo($('.related-pic-video')[0].attribs.href)
-        const videoType = videoLink ? ('video/' + videoLink.split('.').pop()) : ''
+        const videoLink =  await getMovieVideo($('.related-pic-video')[0].attribs.href, id)
         const moment = await getMoment(id)
 
         resolve({
+          id,
           name,
           movieType,
           runTime,
@@ -137,7 +151,6 @@ router.get('/detail', async function (ctx) {
           synopsis,
           imageLink,
           videoLink,
-          videoType,
           moment
         })
       })
@@ -147,6 +160,42 @@ router.get('/detail', async function (ctx) {
     result: typeof result === 'object' ? 0 : 1,
     data: typeof result === 'object' ? result : [],
     errorInfo: typeof result === 'object' ? '' : result
+  }
+})
+
+router.get('/get-movie-stream.mp4', ctx => {
+  const { id } = ctx.query
+  const filePath = path.join(__dirname, '../movieFiles/' + id + '.mp4')
+  const stat = fs.statSync(filePath)
+  const fileSize = stat.size
+  const { range } = ctx.request.header
+
+  if (range) {
+    const parts = range.replace(/bytes=/, '').split('-')
+    const start = parseInt(parts[0], 10)
+    let end = parts[1] ? parseInt(parts[1], 10) : start + 999999
+
+    end = end > fileSize - 1 ? fileSize - 1 : end
+
+    const chunkSize = (end - start) + 1
+    const file = fs.createReadStream(filePath, { start, end })
+    const head = {
+      'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+      'Accept-Ranges': 'bytes',
+      'Content-Length': chunkSize,
+      'Content-Type': 'video/mp4'
+    }
+    ctx.set(head)
+    ctx.response.status = 206
+
+    ctx.body = file
+  } else {
+    ctx.response.status = 200
+    ctx.set({
+      'Content-Length': fileSize,
+      'Content-Type': 'video/mp4'
+    })
+    ctx.body = fs.createReadStream(filePath)
   }
 })
 
