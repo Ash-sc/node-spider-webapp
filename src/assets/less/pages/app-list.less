@@ -1,0 +1,36 @@
+.app-list-page {
+
+  .title {
+    text-align: center;
+    padding: 0.5rem 0;
+    background-color: rgba(255, 99, 7, 0.76);
+    color: #fff;
+  }
+
+  .app-items {
+
+    .app-item {
+      padding: .2rem .5rem;
+
+      img {
+        width: 25%;
+        border-radius: 5px;
+      }
+
+    }
+
+    .app-item:nth-child(6n + 2) img, .app-item:nth-child(6n) img {
+      margin-left: 25%;
+    }
+
+    .app-item:nth-child(6n + 3) img, .app-item:nth-child(6n + 5) img {
+      margin-left: 50%;
+    }
+
+    .app-item:nth-child(6n + 4) img {
+      margin-left: 75%;
+    }
+
+  }
+
+}

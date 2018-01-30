@@ -1,5 +1,6 @@
 <template>
   <div class="page-section movie-detail-page">
+    <span class="back-to-list" @click="backToList">&lt;</span>
     <div class="movie-preview-section">
       <div class="movie-subject" v-show="!videoShow">
         <img :src="movieDetail.imageLink" class="movie-img" v-show="movieDetail.imageLink">
@@ -76,6 +77,10 @@ export default {
     toggleVideoShow(type) {
       this.videoShow = type
       this.loadingVideo = true
+    },
+
+    backToList() {
+      this.$router.push({ name: 'dou-ban-movie-list', params: { type: this.$route.params.type } })
     }
   },
 

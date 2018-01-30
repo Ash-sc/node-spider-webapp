@@ -5,7 +5,7 @@ export default [
       require(['@/views/'], resolve)
     },
     redirect: to => {
-      return { name: 'dou-ban-movie' }
+      return { name: 'dou-ban-movie-list' }
     },
     children: [
       {
@@ -25,13 +25,13 @@ export default [
         },
         children: [
           {
-            path: '/dou-ban-movie/list',
+            path: '/dou-ban-movie/list/:type?',
             name: 'dou-ban-movie-list',
             component (resolve) {
               require(['@/views/doubanMovie/list'], resolve)
             }
           }, {
-            path: '/dou-ban-movie/detail/:id',
+            path: '/dou-ban-movie/detail/:id/:type',
             name: 'dou-ban-movie-detail',
             component (resolve) {
               require(['@/views/doubanMovie/detail'], resolve)

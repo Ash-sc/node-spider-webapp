@@ -47,7 +47,7 @@ export default {
 
   data() {
     return {
-      menuType: 'nowPlayingList',
+      menuType: this.$route.params.type || 'nowPlayingList',
       catetogyList: [
         { name: '正在热映', type: 'nowPlayingList' },
         { name: '即将上映', type: 'willPlayList' }
@@ -62,6 +62,7 @@ export default {
       if (menuType === type || isLoading) return false
 
       this.menuType = type
+      this.$router.push({ name: 'dou-ban-movie-list', params: { type } })
       return this.getListData(type)
     },
 
@@ -74,7 +75,7 @@ export default {
 
     showDetail(link) {
       const id = link.split('/')[4]
-      this.$router.push({ name: 'dou-ban-movie-detail', params: { id } })
+      this.$router.push({ name: 'dou-ban-movie-detail', params: { id, type: this.menuType } })
     }
   },
 
