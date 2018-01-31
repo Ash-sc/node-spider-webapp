@@ -5,6 +5,7 @@ import koaRouter from 'koa-router'
 import koaBodyparser from 'koa-bodyparser'
 
 import movieList from './routes/movieList'
+import zhihu from './routes/zhihu'
 
 const schedule = require('node-schedule')
 const fs = require('fs')
@@ -28,6 +29,7 @@ app.on('error', function (err, ctx) {
 })
 
 router.use('/movieList', movieList.routes())
+router.use('/zhihu', zhihu.routes())
 
 app.use(router.routes())
 

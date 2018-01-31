@@ -4,11 +4,12 @@ import superagent from 'superagent'
 import request from 'request'
 
 const Entities = require('html-entities').XmlEntities
-const router = koaRouter()
 const entities = new Entities()
 
 const fs = require('fs')
 const path = require('path')
+
+const router = koaRouter()
 
 router.get('/list', async function (ctx) {
 
@@ -25,6 +26,7 @@ router.get('/list', async function (ctx) {
         if (err) {
           reject(err)
         }
+
         const $ = cheerio.load(res.text)
         const movies = []
 
@@ -47,6 +49,7 @@ router.get('/list', async function (ctx) {
             })
           })
         }
+
         resolve(movies)
       })
   })
@@ -59,6 +62,7 @@ router.get('/list', async function (ctx) {
 })
 
 const getMovieVideo = (link, id) => {
+
   return new Promise((resolve, reject) => {
     superagent
       .get(link)
@@ -85,6 +89,7 @@ const getMovieVideo = (link, id) => {
 }
 
 const getMoment = id => {
+
     return new Promise((resolve, reject) => {
       superagent
         .get(`https://movie.douban.com/subject/${id}/comments?sort=new_score&status=P`)
@@ -94,7 +99,6 @@ const getMoment = id => {
           }
 
           const $ = cheerio.load(res.text)
-
           const result = []
 
           $('#comments .comment-item').each((idx, element) => {
@@ -110,6 +114,7 @@ const getMoment = id => {
 }
 
 router.get('/detail', async function (ctx) {
+
   const { id } = ctx.query
 
   const result = await new Promise((resolve, reject) => {
@@ -119,6 +124,7 @@ router.get('/detail', async function (ctx) {
         if (err) {
           reject(err)
         }
+
         const $ = cheerio.load(res.text)
 
         const name = $('#content > h1 span')[0].children[0].data
@@ -164,6 +170,7 @@ router.get('/detail', async function (ctx) {
 })
 
 router.get('/get-movie-stream.mp4', ctx => {
+
   const { id } = ctx.query
   const filePath = path.join(__dirname, '../movieFiles/' + id + '.mp4')
   const stat = fs.statSync(filePath)
@@ -185,10 +192,11 @@ router.get('/get-movie-stream.mp4', ctx => {
       'Content-Length': chunkSize,
       'Content-Type': 'video/mp4'
     }
+
     ctx.set(head)
     ctx.response.status = 206
-
     ctx.body = file
+
   } else {
     ctx.response.status = 200
     ctx.set({
