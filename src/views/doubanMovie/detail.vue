@@ -1,6 +1,6 @@
 <template>
   <div class="page-section movie-detail-page">
-    <span class="back-to-list" @click="backToList">&lt;</span>
+    <span class="back-to-list icon-left" @click="backToList"></span>
     <div class="movie-preview-section">
       <div class="movie-subject" v-show="!videoShow">
         <img :src="movieDetail.imageLink" class="movie-img" v-show="movieDetail.imageLink">

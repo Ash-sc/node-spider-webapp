@@ -28,15 +28,12 @@
       >{{ item.name }}</li>
     </ul>
     <spider-loading v-show="isLoading"></spider-loading>
-    <assistive-ball></assistive-ball>
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import AssistiveBall from '@/components/assistiveBall'
 
 export default {
-  components: { AssistiveBall },
 
   computed: {
     ...mapGetters({

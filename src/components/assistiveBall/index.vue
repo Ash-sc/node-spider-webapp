@@ -1,71 +1,84 @@
 <template>
-  <div class="assistive-ball-bg">
-    <div class="assistive-ball-body" :class="`ball-status-${currentStatus}`">
-      <button class="main-ball" @click="mainBallAction"></button>
-      <ul class="child-ball-list">
-        <li
-          class="child-ball"
-          v-for="(item, index) in dataList"
-          :key="index"
-        ></li>
-      </ul>
-    </div>
+  <div class="assistive-ball-body" :class="`ball-status-${currentStatus}`">
+    <button class="main-ball" @click="mainBallAction" :class="{'icon-close': currentStatus === 'wake-up'}"></button>
+    <ul class="child-ball-list">
+      <li
+        class="child-ball"
+        v-for="(item, index) in dataList"
+        :key="index"
+      >
+      <div class="ball" :class="`icon-${item.icon}`" @click="jumpTo(item.routerName)"></div>
+      </li>
+    </ul>
+    <div class="assistive-ball-bg" v-show="currentStatus === 'wake-up'" @click="closeBall"></div>
   </div>
 </template>
 <script>
 export default {
   data: () => ({
-    statusArr: ['adsorption', 'wake-up', 'active'],
     currentStatus: 'adsorption',
     dataList: [
-      { icon: '123', routerName: '' },
-      { icon: '123', routerName: '' },
-      { icon: '123', routerName: '' },
-      { icon: '123', routerName: '' },
-      { icon: '123', routerName: '' }
+      { icon: 'movie', routerName: 'dou-ban-movie-list' },
+      { icon: 'weibo', routerName: '' },
+      { icon: 'zhihu', routerName: '' },
+      { icon: 'movie', routerName: 'dou-ban-movie-list' },
+      { icon: 'weibo', routerName: '' }
     ]
   }),
 
   methods: {
     mainBallAction() {
-      const { currentStatus, statusArr } = this
-      const index = statusArr.indexOf(currentStatus) + 1
-      this.currentStatus = statusArr[index > 2 ? 0 : index]
+      const { currentStatus } = this
+      this.currentStatus = currentStatus === 'adsorption' ? 'wake-up' : 'adsorption'
+      window[`${currentStatus === 'adsorption' ? 'add' : 'remove'}EventListener`]('scroll', this.scrollListener)
+    },
+
+    jumpTo(name) {
+      this.$router.push({ name })
+      this.currentStatus = 'adsorption'
+    },
+
+    closeBall() {
+      this.currentStatus = 'adsorption'
+    },
+
+    scrollListener() {
+      const { isSroll, currentStatus } = this
+      if (isSroll) return false
+      if (currentStatus === 'wake-up') this.currentStatus = 'adsorption'
+      this.isSroll = true
+      window.setTimeout(() => { this.isSroll = false }, 1000)
     }
+  },
+
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.scrollListener)
   }
 }
 </script>
 <style lang="less" scoped>
-.assistive-ball-bg {
-  position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  z-index: 1024;
-}
 .assistive-ball-body {
   position: fixed;
-  right: 0;
+  right: 1.1rem;
   top: 50%;
-  margin-top: -1rem;
-  margin-right: .1rem;
-  width: 2rem;
-  height: 2rem;
   box-sizing: border-box;
-  transition: margin-right 0.1s cubic-bezier(0.68, -0.12, 0.66, 1.82);
+  z-index: 1024;
 
   .main-ball {
+    position: absolute;
     width: 2rem;
     height: 2rem;
+    left: -1rem;
+    top: -1rem;
     border: none;
     border-radius: 50%;
-    background-color: rgba(0, 0, 0, .3);
+    background-color: rgba(0, 0, 0, .5);
     padding: .3rem;
     outline: none;
+    z-index: 1;
   }
 
-  .main-ball:before {
+  .main-ball:not(.icon-close):before {
     content: '';
     position: absolute;
     width: 1.4rem;
@@ -74,64 +87,78 @@ export default {
     border-radius: 50%;
     left: .3rem;
     top: .3rem;
+    box-sizing: border-box;
+  }
+  .main-ball.icon-close {
+    color: #fff;
+    font-size: 1rem;
   }
 
   .child-ball-list {
     position: absolute;
-    left: 1rem;
-    top: 1rem;
+    left: 0;
+    top: 0;
     padding: 0;
+    margin: 0;
     list-style: none;
+    z-index: 1;
 
     .child-ball {
       position: absolute;
-      display: none;
+      width: 0;
+      height: 0;
+      background-color: #000;
+      transition: transform .2s cubic-bezier(0.42, 0, 0.4, 1.76);
+    }
+
+    .ball {
+      position: absolute;
       width: 2rem;
       height: 2rem;
+      left: -1rem;
+      top: -1rem;
       border-radius: 50%;
-      background-color: rgba(0, 0, 0, .3);
+      background-color: rgba(0, 0, 0, .5);
+      transform: scale(0);
+      transition: transform .2s cubic-bezier(0.42, 0, 0.4, 1.76);
+      opacity: 0;
+      line-height: 2rem;
+      text-align: center;
+      color: #fff;
     }
 
   }
 
 }
 
+.generate-child-ball(20);
+
+.generate-child-ball(@n, @i: 1) when (@i =< @n) {
+  .ball-status-wake-up {
+    .child-ball:nth-child(@{i}) {
+      transform: translate(0 - sin(3.14 / 180 * (18 + 36 * (@i - 1))) * 5rem, 0 - cos(3.14 / 180 * (18 + 36 * (@i - 1))) * 5rem);
+      transition-delay: @i * .1s;
+      .ball {
+        opacity: 1;
+        transform: scale(1);
+        transition-delay: @i * .1s;
+      }
+    }
+  }
+  .generate-child-ball(@n, (@i + 1));
+}
+
 .ball-status-adsorption {
   margin-right: -.9rem;
 }
 
-.ball-status-wake-up {
-  .child-ball-list .child-ball {
-    display: block;
-  }
-  .child-ball:nth-child(1), .child-ball:nth-child(5) {
-    right: sin(3.14 / 180 * 0) * 5rem - 1rem;
-  }
-
-  .child-ball:nth-child(1) {
-    margin-top: 0 - cos(3.14 / 180 * 0) * 5rem - 1rem;
-  }
-
-  .child-ball:nth-child(5) {
-    margin-top: cos(3.14 / 180 * 0) * 5rem - 1rem;
-  }
-
-  .child-ball:nth-child(2), .child-ball:nth-child(4) {
-    right: sin(3.14 / 180 * 45) * 5rem - 1rem;
-  }
-
-  .child-ball:nth-child(2) {
-    margin-top: 0 - cos(3.14 / 180 * 45) * 5rem - .5rem;
-  }
-
-  .child-ball:nth-child(4) {
-    margin-top: cos(3.14 / 180 * 45) * 5rem - 2rem + .5rem;
-  }
-
-  .child-ball:nth-child(3) {
-    top: -1rem;
-    right: 4rem;
-  }
+.assistive-ball-bg {
+  position: fixed;
+  opacity: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
 }
 </style>
 
