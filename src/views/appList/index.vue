@@ -9,14 +9,11 @@
         <img src="http://olo3fohgk.bkt.clouddn.com/morty.gif" alt="movie" />
       </div>
     </div>
-    <assistive-ball></assistive-ball>
   </div>
 </template>
 <script>
-import AssistiveBall from '@/components/assistiveBall'
 
 export default {
-  components: { AssistiveBall },
 
   data() {
     return {

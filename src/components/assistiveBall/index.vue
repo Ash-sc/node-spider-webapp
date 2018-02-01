@@ -1,29 +1,42 @@
 <template>
   <div class="assistive-ball-body" :class="`ball-status-${currentStatus}`">
-    <button class="main-ball" @click="mainBallAction" :class="{'icon-close': currentStatus === 'wake-up'}"></button>
+    <button
+      class="main-ball"
+      @touchend="mainBallAction"
+      :class="{'icon-close': currentStatus === 'wake-up'}"
+    ></button>
     <ul class="child-ball-list">
       <li
         class="child-ball"
         v-for="(item, index) in dataList"
         :key="index"
       >
-      <div class="ball" :class="`icon-${item.icon}`" @click="jumpTo(item.routerName)"></div>
+        <div
+          class="ball"
+          :class="`${item.icon}`"
+          @touchend="jumpTo(item.routerName)"
+        ></div>
       </li>
     </ul>
-    <div class="assistive-ball-bg" v-show="currentStatus === 'wake-up'" @click="closeBall"></div>
+    <div
+     class="assistive-ball-bg"
+     v-show="currentStatus === 'wake-up'"
+     @touchend="closeBall"
+    ></div>
   </div>
 </template>
+
 <script>
 export default {
+  props: {
+    dataList: {
+      type: Array,
+      required: true,
+      default: () =>([])
+    }
+  },
   data: () => ({
-    currentStatus: 'adsorption',
-    dataList: [
-      { icon: 'movie', routerName: 'dou-ban-movie-list' },
-      { icon: 'weibo', routerName: '' },
-      { icon: 'zhihu', routerName: '' },
-      { icon: 'movie', routerName: 'dou-ban-movie-list' },
-      { icon: 'weibo', routerName: '' }
-    ]
+    currentStatus: 'adsorption'
   }),
 
   methods: {
@@ -63,6 +76,7 @@ export default {
   top: 50%;
   box-sizing: border-box;
   z-index: 1024;
+  transition: margin-right .1s cubic-bezier(0.24, 0.17, 0.21, 2.17);
 
   .main-ball {
     position: absolute;
@@ -108,6 +122,7 @@ export default {
       width: 0;
       height: 0;
       background-color: #000;
+      transform: translate(0, 0);
       transition: transform .2s cubic-bezier(0.42, 0, 0.4, 1.76);
     }
 
@@ -121,7 +136,6 @@ export default {
       background-color: rgba(0, 0, 0, .5);
       transform: scale(0);
       transition: transform .2s cubic-bezier(0.42, 0, 0.4, 1.76);
-      opacity: 0;
       line-height: 2rem;
       text-align: center;
       color: #fff;
@@ -139,7 +153,6 @@ export default {
       transform: translate(0 - sin(3.14 / 180 * (18 + 36 * (@i - 1))) * 5rem, 0 - cos(3.14 / 180 * (18 + 36 * (@i - 1))) * 5rem);
       transition-delay: @i * .1s;
       .ball {
-        opacity: 1;
         transform: scale(1);
         transition-delay: @i * .1s;
       }
