@@ -23,7 +23,7 @@ router.get('/list', async function (ctx) {
     superagent
       .get(targetUrl)
       .end((err, res) => {
-        if (err) {
+        if (err || !res) {
           reject(err)
         }
 
@@ -67,7 +67,7 @@ const getMovieVideo = (link, id) => {
     superagent
       .get(link)
       .end((err, res) => {
-        if (err) {
+        if (err || !res) {
           reject('')
         }
 
@@ -94,7 +94,7 @@ const getMoment = id => {
       superagent
         .get(`https://movie.douban.com/subject/${id}/comments?sort=new_score&status=P`)
         .end((err, res) => {
-          if (err) {
+          if (err || !res) {
             reject([])
           }
 
@@ -121,7 +121,7 @@ router.get('/detail', async function (ctx) {
     superagent
       .get('https://movie.douban.com/subject/' + id)
       .end(async function(err, res) {
-        if (err) {
+        if (err || !res) {
           reject(err)
         }
 
