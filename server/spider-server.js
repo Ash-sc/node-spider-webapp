@@ -6,7 +6,8 @@ import koaBodyparser from 'koa-bodyparser'
 
 import movieList from './routes/movieList'
 
-const schedule = require('node-schedule')
+import clearMovieCache from './scheduleTask/clearMovieCache'
+
 const fs = require('fs')
 const path = require('path')
 const app = new Koa()
@@ -31,18 +32,7 @@ router.use('/movieList', movieList.routes())
 
 app.use(router.routes())
 
-// 定时任务（定时清除无用的电影宣传片资源）
-const j = schedule.scheduleJob('59 23 * * * 7', function(){
-  let files = []
-  const moviePath = path.join(__dirname, './movieFiles')
-
-  if(fs.existsSync(moviePath)) {
-    files = fs.readdirSync(moviePath)
-    files.forEach(file => {
-      fs.unlinkSync(moviePath + "/" + file)
-    })
-  }
-})
+clearMovieCache()
 
 
 app.listen(10211)

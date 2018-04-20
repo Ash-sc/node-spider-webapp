@@ -17,6 +17,8 @@ const getters = {
 // actions
 const actions = {
   GET_MOVIE_LIST({ commit, state }, query = {}) {
+    if (state[query.type].length) return state[query.type]
+
     return axios({
       url: '/movieList/list',
       body: query

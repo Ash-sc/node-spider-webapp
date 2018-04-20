@@ -4,11 +4,12 @@ import superagent from 'superagent'
 import request from 'request'
 
 const Entities = require('html-entities').XmlEntities
-const router = koaRouter()
 const entities = new Entities()
 
 const fs = require('fs')
 const path = require('path')
+
+const router = koaRouter()
 
 router.get('/list', async function (ctx) {
 
@@ -22,9 +23,10 @@ router.get('/list', async function (ctx) {
     superagent
       .get(targetUrl)
       .end((err, res) => {
-        if (err) {
+        if (err || !res) {
           reject(err)
         }
+
         const $ = cheerio.load(res.text)
         const movies = []
 
@@ -47,6 +49,7 @@ router.get('/list', async function (ctx) {
             })
           })
         }
+
         resolve(movies)
       })
   })
@@ -59,16 +62,17 @@ router.get('/list', async function (ctx) {
 })
 
 const getMovieVideo = (link, id) => {
+
   return new Promise((resolve, reject) => {
     superagent
       .get(link)
       .end((err, res) => {
-        if (err) {
+        if (err || !res) {
           reject('')
         }
 
         const $ = cheerio.load(res.text)
-        const filePath = path.join(__dirname, '../movieFiles/')
+        const filePath = path.join(__dirname, '../cache/movieFiles/')
         const videoLink = $('video source')[0].attribs.src
 
         resolve(videoLink)
@@ -78,23 +82,23 @@ const getMovieVideo = (link, id) => {
           fs.mkdirSync(filePath)
         }
         if (!fs.existsSync(filePath + id + '.mp4')) {
-          request(videoLink).pipe(fs.createWriteStream(path.join(__dirname, '../movieFiles/' + id + '.mp4')))
+          request(videoLink).pipe(fs.createWriteStream(path.join(__dirname, '../cache/movieFiles/' + id + '.mp4')))
         }
       })
   })
 }
 
 const getMoment = id => {
+
     return new Promise((resolve, reject) => {
       superagent
         .get(`https://movie.douban.com/subject/${id}/comments?sort=new_score&status=P`)
         .end((err, res) => {
-          if (err) {
+          if (err || !res) {
             reject([])
           }
 
           const $ = cheerio.load(res.text)
-
           const result = []
 
           $('#comments .comment-item').each((idx, element) => {
@@ -110,15 +114,17 @@ const getMoment = id => {
 }
 
 router.get('/detail', async function (ctx) {
+
   const { id } = ctx.query
 
   const result = await new Promise((resolve, reject) => {
     superagent
       .get('https://movie.douban.com/subject/' + id)
       .end(async function(err, res) {
-        if (err) {
+        if (err || !res) {
           reject(err)
         }
+
         const $ = cheerio.load(res.text)
 
         const name = $('#content > h1 span')[0].children[0].data
@@ -164,8 +170,9 @@ router.get('/detail', async function (ctx) {
 })
 
 router.get('/get-movie-stream.mp4', ctx => {
+
   const { id } = ctx.query
-  const filePath = path.join(__dirname, '../movieFiles/' + id + '.mp4')
+  const filePath = path.join(__dirname, '../cache/movieFiles/' + id + '.mp4')
   const stat = fs.statSync(filePath)
   const fileSize = stat.size
   const { range } = ctx.request.header
@@ -185,10 +192,11 @@ router.get('/get-movie-stream.mp4', ctx => {
       'Content-Length': chunkSize,
       'Content-Type': 'video/mp4'
     }
+
     ctx.set(head)
     ctx.response.status = 206
-
     ctx.body = file
+
   } else {
     ctx.response.status = 200
     ctx.set({

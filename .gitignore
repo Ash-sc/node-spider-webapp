@@ -6,7 +6,7 @@
 /.vscode
 /.idea
 
-*/movieFiles/*
+server/cache/movieFiles/*
 
 # testing
 /coverage
