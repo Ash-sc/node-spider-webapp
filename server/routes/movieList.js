@@ -72,7 +72,7 @@ const getMovieVideo = (link, id) => {
         }
 
         const $ = cheerio.load(res.text)
-        const filePath = path.join(__dirname, '../movieFiles/')
+        const filePath = path.join(__dirname, '../cache/movieFiles/')
         const videoLink = $('video source')[0].attribs.src
 
         resolve(videoLink)
@@ -82,7 +82,7 @@ const getMovieVideo = (link, id) => {
           fs.mkdirSync(filePath)
         }
         if (!fs.existsSync(filePath + id + '.mp4')) {
-          request(videoLink).pipe(fs.createWriteStream(path.join(__dirname, '../movieFiles/' + id + '.mp4')))
+          request(videoLink).pipe(fs.createWriteStream(path.join(__dirname, '../cache/movieFiles/' + id + '.mp4')))
         }
       })
   })
@@ -172,7 +172,7 @@ router.get('/detail', async function (ctx) {
 router.get('/get-movie-stream.mp4', ctx => {
 
   const { id } = ctx.query
-  const filePath = path.join(__dirname, '../movieFiles/' + id + '.mp4')
+  const filePath = path.join(__dirname, '../cache/movieFiles/' + id + '.mp4')
   const stat = fs.statSync(filePath)
   const fileSize = stat.size
   const { range } = ctx.request.header

@@ -1,6 +1,6 @@
 import Loading from './loading.vue'
 const VueComponent = {
-  install: function(Vue) {
+  install: Vue => {
     Vue.component('spider-loading', Loading)
   }
 }
