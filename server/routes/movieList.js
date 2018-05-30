@@ -1,7 +1,7 @@
-import koaRouter from 'koa-router'
-import cheerio from 'cheerio'
-import superagent from 'superagent'
-import request from 'request'
+const koaRouter = require('koa-router')
+const cheerio = require('cheerio')
+const superagent = require('superagent')
+const request = require('request')
 
 const Entities = require('html-entities').XmlEntities
 const entities = new Entities()
@@ -207,4 +207,4 @@ router.get('/get-movie-stream.mp4', ctx => {
   }
 })
 
-export default router
+module.exports = router

@@ -4,12 +4,12 @@ import Vue from 'vue/dist/vue.js'
 import router from '@/routes/'
 import App from '@/components/App'
 import store from './store'
-// import AssistiveBall from 'vue-simple-assistive-ball'
+import AssistiveBall from 'vue-simple-assistive-ball'
 
 import Loading from '@/components/loading/index.js'
 
 Vue.use(Loading)
-// Vue.use(AssistiveBall)
+Vue.use(AssistiveBall)
 
 new Vue({
   el: '#app',
