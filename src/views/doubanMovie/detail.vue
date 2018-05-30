@@ -10,7 +10,7 @@
           <span class="txt-ellipsis">时长：{{ movieDetail.runTime || '-' }}分钟</span>
           <span class="txt-ellipsis">上映时间：{{ movieDetail.releaseDate || '-' }}</span>
           <span class="txt-ellipsis">评分：{{ movieDetail.score || '-' }}</span>
-          <span @click="toggleVideoShow(true)">宣传片（戳我！）</span>
+          <span @click="toggleVideoShow(true)" v-show="movieDetail.videoLink">宣传片（戳我！）</span>
         </div>
       </div>
       <div class="video-section" v-if="loadingVideo" v-show="videoShow">

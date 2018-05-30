@@ -144,7 +144,7 @@ router.get('/detail', async function (ctx) {
         const score = $('#interest_sectl .rating_num')[0].children.length && $('#interest_sectl .rating_num')[0].children[0].data
         const synopsis = $('#link-report span[property="v:summary"]')[0].children[0].data.replace(/\s/g, '')
         const imageLink = $('#mainpic .nbgnbg img')[0].attribs.src
-        const videoLink =  await getMovieVideo($('.related-pic-video')[0].attribs.href, id)
+        const videoLink = $('.related-pic-video').length ? await getMovieVideo($('.related-pic-video')[0].attribs.href, id) : ''
         const moment = await getMoment(id)
 
         resolve({
@@ -161,6 +161,8 @@ router.get('/detail', async function (ctx) {
         })
       })
   })
+
+  console.log(result, 22)
 
   ctx.body = {
     result: typeof result === 'object' ? 0 : 1,
@@ -180,7 +182,7 @@ router.get('/get-movie-stream.mp4', ctx => {
   if (range) {
     const parts = range.replace(/bytes=/, '').split('-')
     const start = parseInt(parts[0], 10)
-    let end = parts[1] ? parseInt(parts[1], 10) : start + 999999
+    let end = parts[1] ? parseInt(parts[1], 10) : start + 4999999
 
     end = end > fileSize - 1 ? fileSize - 1 : end
 
