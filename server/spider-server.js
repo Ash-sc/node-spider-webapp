@@ -1,12 +1,12 @@
-import Koa from 'koa'
-import json from 'koa-json'
-import logger from 'koa-logger'
-import koaRouter from 'koa-router'
-import koaBodyparser from 'koa-bodyparser'
+const Koa = require('koa')
+const json = require('koa-json')
+const logger = require('koa-logger')
+const koaRouter = require('koa-router')
+const koaBodyparser = require('koa-bodyparser')
 
-import movieList from './routes/movieList'
+const movieList = require('./routes/movieList')
 
-import clearMovieCache from './scheduleTask/clearMovieCache'
+const clearMovieCache = require('./scheduleTask/clearMovieCache')
 
 const fs = require('fs')
 const path = require('path')
