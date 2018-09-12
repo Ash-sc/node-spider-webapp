@@ -7,6 +7,7 @@ class Movie extends React.Component {
         <header className="App-header">
           <h1 className="App-title">parent</h1>
         </header>
+        {this.props.children}
       </div>
     )
   }
