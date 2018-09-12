@@ -3,11 +3,6 @@
 # dependencies
 /node_modules
 
-/.vscode
-/.idea
-
-server/cache/movieFiles/*
-
 # testing
 /coverage
 
