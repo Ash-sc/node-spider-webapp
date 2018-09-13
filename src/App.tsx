@@ -1,8 +1,8 @@
 import * as React from 'react'
 import Main from './pages/'
-import Movie from './pages/movie/index'
 import MovieList from './pages/movie/movie-list'
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import MovieDetail from './pages/movie/movie-detail'
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 
 class App extends React.Component {
   public render() {
@@ -10,9 +10,9 @@ class App extends React.Component {
       <Router>
         <Main>
           <Switch>
-            <Route path="/" component={Movie} exact={true} />
             <Route path="/movie-list" component={MovieList} exact={true} />
-            <Route path="/movie-detail" component={MovieList} />
+            <Route path="/movie-detail" component={MovieDetail} />
+            <Redirect to="/movie-list" />
           </Switch>
         </Main>
       </Router>

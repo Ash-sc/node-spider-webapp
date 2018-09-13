@@ -1,16 +1,22 @@
 import * as React from 'react'
+import TopBar from '../components/top-bar'
+import Footer from '../components/footer'
 
-class Movie extends React.Component {
+interface MainProps {
+  name?: string
+}
+
+class Main extends React.Component<MainProps> {
+
   public render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <h1 className="App-title">parent</h1>
-        </header>
+      <div className="main">
+        <TopBar />
         {this.props.children}
+        <Footer />
       </div>
     )
   }
 }
 
-export default Movie
+export default Main
