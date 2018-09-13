@@ -1,8 +1,8 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import App from './App'
-import 'antd/dist/antd.less';
-import './assets/less/index.css'
+import './assets/less/index.less'
+import 'antd-mobile/dist/antd-mobile.less'
 import registerServiceWorker from './registerServiceWorker'
 
 ReactDOM.render(

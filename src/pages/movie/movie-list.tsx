@@ -1,9 +1,12 @@
 import * as React from 'react'
-import api from '../../api'
+import MovieApi from '../../api/movie'
 
 class MovieList extends React.Component {
   public componentDidMount() {
-    console.log(api({ url: '/api/ccs', data: {} }))
+    MovieApi.movieList('nowPlayingList')
+    .then(res => {
+      console.log(res, 22)
+    })
   }
 
   public render() {

@@ -28,7 +28,7 @@ app.on('error', function (err, ctx) {
   console.log('server error', err)
 })
 
-router.use('/movieList', movieList.routes())
+router.use('/movie-list', movieList.routes())
 
 app.use(router.routes())
 
