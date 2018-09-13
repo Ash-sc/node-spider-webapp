@@ -11,7 +11,7 @@ const path = require('path')
 
 const router = koaRouter()
 
-router.get('/list', async function (ctx) {
+router.post('/list', async function (ctx) {
 
   const { type } = ctx.query
 
@@ -113,7 +113,7 @@ const getMoment = id => {
     })
 }
 
-router.get('/detail', async function (ctx) {
+router.post('/detail', async function (ctx) {
 
   const { id } = ctx.query
 
