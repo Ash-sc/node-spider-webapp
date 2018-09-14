@@ -13,7 +13,7 @@ const router = koaRouter()
 
 router.post('/list', async function (ctx) {
 
-  const { type } = ctx.query
+  const { type } = ctx.request.body
 
   const result = await new Promise((resolve, reject) => {
     const targetUrl = type === 'nowPlayingList'
@@ -115,7 +115,7 @@ const getMoment = id => {
 
 router.post('/detail', async function (ctx) {
 
-  const { id } = ctx.query
+  const { id } = ctx.request.body
 
   const result = await new Promise((resolve, reject) => {
     superagent
@@ -171,9 +171,9 @@ router.post('/detail', async function (ctx) {
   }
 })
 
-router.get('/get-movie-stream.mp4', ctx => {
+router.post('/get-movie-stream.mp4', ctx => {
 
-  const { id } = ctx.query
+  const { id } = ctx.request.body
   const filePath = path.join(__dirname, '../cache/movieFiles/' + id + '.mp4')
   const stat = fs.statSync(filePath)
   const fileSize = stat.size

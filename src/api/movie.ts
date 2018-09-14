@@ -1,10 +1,10 @@
-import api from './index'
+import api from '.'
 
 class MovieApi {
   public movieList (type: string) {
     return api({
       data: { type },
-      url: '/movie-list/list'
+      url: '/movie/list'
     })
   }
 }

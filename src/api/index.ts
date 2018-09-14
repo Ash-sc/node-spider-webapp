@@ -3,15 +3,16 @@ interface ApiParams {
   data: object
 }
 
+const headers = new Headers({
+  'Content-Type': 'application/json; charset=utf-8'
+})
+
 export default function(params: ApiParams) {
   return new Promise((resolve, reject) => {
     fetch('/api' + params.url, {
       body: JSON.stringify(params.data),
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8'
-      },
-      method: 'POST',
-      mode: 'no-cors'
+      headers,
+      method: 'POST'
     })
       .then(res => {
         if (res.status === 200) {

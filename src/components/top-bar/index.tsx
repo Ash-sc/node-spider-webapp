@@ -1,12 +1,20 @@
 import * as React from 'react'
 import { Drawer, List, NavBar, Icon } from 'antd-mobile'
+import { withRouter } from 'react-router-dom'
+import { RouteComponentProps } from 'react-router'
 
-class TopBar extends React.Component {
+interface PathParamsType {
+  id?: string
+}
+
+type PropsType = RouteComponentProps<PathParamsType> & {}
+
+class TopBar extends React.Component<PropsType> {
   public state = {
     open: false,
     appList: [
       { name: 'Movie View', link: '/movie-list' },
-      { name: 'Online Reader', link: '/online-reader' },
+      { name: 'Online Reader', link: '/search-novel' }
     ]
   }
 
@@ -17,7 +25,7 @@ class TopBar extends React.Component {
   }
 
   public menuJump(link: string) {
-    console.log(link)
+    this.props.history.push(link)
     this.setState({
       open: false
     })
@@ -31,27 +39,27 @@ class TopBar extends React.Component {
           leftContent={[
             <Icon key="0" type="ellipsis" onClick={this.onOpenChange} />
           ]}
-          rightContent={[
-            <Icon key="0" type="search" />
-          ]}
+          rightContent={[<Icon key="0" type="search" />]}
         >
-        Web App
+          Web App
         </NavBar>
         <Drawer
           className="app-menu"
           style={{ minHeight: document.documentElement.clientHeight }}
           enableDragHandle
-          sidebar={this.state.appList.map(
-            (info, i) => (
-              <List.Item key={i} onClick={() => this.menuJump(info.link)}>{info.name}</List.Item>
-            )
-          )}
+          sidebar={this.state.appList.map((info, i) => (
+            <List.Item key={i} onClick={() => this.menuJump(info.link)}>
+              {info.name}
+            </List.Item>
+          ))}
           open={this.state.open}
           onOpenChange={this.onOpenChange}
-        >Hide Menu</Drawer>
+        >
+          Hide Menu
+        </Drawer>
       </div>
     )
   }
 }
 
-export default TopBar
+export default withRouter(TopBar)
