@@ -8,6 +8,7 @@ const Item = List.Item
 
 interface PathParamsType {
   link: string
+  index?: string
 }
 
 interface ChapterList {
@@ -34,7 +35,7 @@ class NovelSearch extends React.Component<PropsType, any> {
       chapterList: [],
       order: -1,
       currentView: 'chapter',
-      currentIndex: 0,
+      currentIndex: -1,
       content: '',
       transformHeight: 0,
       currentTransformHeight: 0
@@ -43,6 +44,7 @@ class NovelSearch extends React.Component<PropsType, any> {
 
   public componentDidMount() {
     this.setState({ articleLink: atob(this.props.match.params.link) })
+    // 获取章节信息
     NovelApi.getChapter(atob(this.props.match.params.link)).then(
       (data: ChapterList) => {
         this.setState({
@@ -50,6 +52,13 @@ class NovelSearch extends React.Component<PropsType, any> {
           loadingContent: false,
           chapterList: data.chapterList
         })
+        if (
+          this.props.match.params.index &&
+          this.props.match.params.index !== 'chapter'
+        ) {
+          const index = parseInt(this.props.match.params.index, 10)
+          this.viewChapter(data.chapterList[index].href, index)
+        }
       }
     )
 
@@ -67,12 +76,14 @@ class NovelSearch extends React.Component<PropsType, any> {
     })
   }
 
+  // 返回章节列表
   public backToChapter = () => {
     this.setState({
       currentView: 'chapter'
     })
   }
 
+  // 点击章节 查看内容
   public viewChapter = (href: string, i: number) => {
     this.setState({
       loadingContent: true
@@ -87,6 +98,10 @@ class NovelSearch extends React.Component<PropsType, any> {
           currentTransformHeight: 0
         })
         this.contentRef.current.style.transform = 'translateY(0)'
+        // 更新路由
+        this.props.history.replace(
+          '/novel-content/' + this.props.match.params.link + '/' + i
+        )
       },
       () => {
         this.setState({ loadingContent: false, currentTransformHeight: 0 })
@@ -95,12 +110,14 @@ class NovelSearch extends React.Component<PropsType, any> {
     )
   }
 
+  // 上一章  下一章
   public changeContent = (type: number) => {
     const { chapterList, currentIndex } = this.state
     const href = chapterList[currentIndex + type].href
     this.viewChapter(href, currentIndex + type)
   }
 
+  // 点击屏幕左右 上下翻屏
   public scrollContent = (e: any) => {
     const windowWidth = document.documentElement.clientWidth
     const sectionHeight = parseInt(
@@ -181,11 +198,14 @@ class NovelSearch extends React.Component<PropsType, any> {
             className="content-paragraph"
             onClick={this.scrollContent}
           >
-            {this.state.chapterList.length && (
-              <p className="chapter-title">
-                {this.state.chapterList[this.state.currentIndex].title}
-              </p>
-            )}
+            {this.state.chapterList.length &&
+              this.state.currentView === 'content' && (
+                <p className="chapter-title">
+                  {this.state.chapterList[this.state.currentIndex].title}
+                  <br />
+                  <br />
+                </p>
+              )}
             <p
               className="main-content"
               dangerouslySetInnerHTML={{ __html: this.state.content }}
