@@ -33,8 +33,8 @@ class NovelSearch extends React.Component<PropsType, {}> {
     this.searchNovel = this.searchNovel.bind(this)
   }
 
+  // 搜索小说
   public searchNovel(key: string) {
-    console.log(key)
     if (!key) {
       return this.setState({
         novelList: []
@@ -58,8 +58,9 @@ class NovelSearch extends React.Component<PropsType, {}> {
     )
   }
 
+  // 查看章节信息
   public viewChapterList(link: string) {
-    this.props.history.push('/novel-content/' + btoa(link))
+    this.props.history.push('/novel-content/' + btoa(link) + '/chapter')
   }
 
   public render() {
