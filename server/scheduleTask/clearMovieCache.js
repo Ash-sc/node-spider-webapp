@@ -7,7 +7,7 @@ module.exports = function() {
 
   schedule.scheduleJob('59 23 * * * 7', function() {
     let files = []
-    const moviePath = path.join(__dirname, './cache/movieFiles')
+    const moviePath = path.join(__dirname, '../cache/movieFiles')
 
     if (fs.existsSync(moviePath)) {
       files = fs.readdirSync(moviePath)

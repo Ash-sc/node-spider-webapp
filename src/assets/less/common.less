@@ -1,67 +1,31 @@
-/* 公共样式  */
-html {
-  overflow: auto;
-}
 body {
-  font-size: 20px;
-  color: #1e1e1e;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,SimSun,sans-serif;
-}
-
-body, div, h1, h2, h3, h4, p, ul, ol, form, dl, dt, dd {
   margin: 0;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: inherit;
-  font-weight: 500;
-  line-height: 1.1;
-  color: inherit;
-}
-
-ul, ol {
-  list-style: none;
   padding: 0;
-}
+  font-family: sans-serif;
+  
+  .main {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
 
-/* 全局通用的 router-view 过渡效果 */
-.fade-transition {
-  transition: opacity .1s ease;
-}
+    .content-body {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+  }
 
-.fade-enter, .fade-leave {
-  opacity: 0;
-}
+  .full-screen-loading {
+    position: fixed;
+    height: 100vh;
+    width: 100%;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, .5);
 
-/* 单行省略 */
-.txt-ellipsis {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  word-break: break-all;
-}
-
-/* 不可选中 */
-.unselected {
-  user-select: none;
-}
-
-.clear {
-  zoom: 1;
-}
-
-.clear:after {
-  content: "";
-  display: block;
-  clear: both;
-}
-
-*, *:before, *:after {
-  box-sizing: border-box;
-}
-
-.hide {
-  display: none;
+    .am-activity-indicator-spinner {
+      margin-left: calc(~'50% - 40px');
+    }
+  }
 }

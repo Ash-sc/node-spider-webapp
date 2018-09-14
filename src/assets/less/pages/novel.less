@@ -1,0 +1,72 @@
+.novel-body {
+  position: relative;
+  height: 100%;
+  overflow: auto;
+
+  .no-result-text {
+    display: block;
+    text-align: center;
+    margin-top: 50%;
+    opacity: .4;
+  }
+
+  .back-icon {
+    position: fixed;
+    right: 5px;
+    top: 50px;
+    background: #fff;
+    border-radius: 2px;
+    text-align: center;
+    z-index: 1;
+  }
+
+  .chapter-section {
+    transition: transform .2s linear;
+    transform: translateX(0);
+    position: absolute;
+    background: #fff;
+    width: 100%;
+
+    &.hide {
+      transform: translateX(-100%);
+    }
+
+    .am-list-item.active {
+      background-color: rgba(16, 142, 233, 0.6);
+      .am-list-content {
+        color: #fff;
+      }
+    }
+  }
+
+  .content-section {
+    height: 100%;
+    overflow: hidden;
+    background: #d4ddcc;
+    color: #4d443e;
+    font-size: 16px;
+  }
+
+  .content-title {
+    padding: 0 10px;
+  }
+
+  .content-paragraph {
+    padding: 0 10px;
+    line-height: 1.5;
+    transform: translateY(0);
+
+    .chapter-title, .main-content {
+      margin: 0;
+    }
+  }
+
+  .chapter-jump {
+    margin: 0 20px;
+
+    .am-flexbox-item {
+      text-align: center;
+      margin: 10px 20px;
+    }
+  }
+}

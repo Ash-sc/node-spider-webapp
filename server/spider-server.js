@@ -4,7 +4,8 @@ const logger = require('koa-logger')
 const koaRouter = require('koa-router')
 const koaBodyparser = require('koa-bodyparser')
 
-const movieList = require('./routes/movieList')
+const movie = require('./routes/movie')
+const novel = require('./routes/novel')
 
 const clearMovieCache = require('./scheduleTask/clearMovieCache')
 
@@ -28,11 +29,12 @@ app.on('error', function (err, ctx) {
   console.log('server error', err)
 })
 
-router.use('/movieList', movieList.routes())
+router.use('/movie', movie.routes())
+router.use('/novel', novel.routes())
 
 app.use(router.routes())
 
 clearMovieCache()
 
 
-app.listen(10211)
+app.listen(9982)

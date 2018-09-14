@@ -1,93 +1,128 @@
 {
-  "name": "spider-webapp",
-  "version": "1.0.0",
-  "description": "一些node爬虫的集合",
-  "main": "index.js",
+  "name": "webapp-react-ts",
+  "version": "0.1.0",
+  "private": true,
   "dependencies": {
-    "axios": "^0.16.2",
-    "babel-preset-env": "^1.6.1",
+    "@types/react-router": "^4.0.30",
+    "@types/react-router-dom": "^4.3.0",
+    "antd-mobile": "^2.2.5",
+    "autoprefixer": "7.1.6",
+    "babel-jest": "^22.1.0",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-import": "^1.8.0",
+    "babel-preset-react-app": "^3.1.1",
+    "case-sensitive-paths-webpack-plugin": "2.1.1",
+    "chalk": "1.1.3",
     "cheerio": "^1.0.0-rc.2",
-    "es6-shim": "^0.35.2",
-    "express": "^4.13.3",
+    "css-loader": "0.28.7",
+    "dotenv": "4.0.0",
+    "dotenv-expand": "4.2.0",
+    "extract-text-webpack-plugin": "3.0.2",
+    "file-loader": "0.11.2",
+    "fork-ts-checker-webpack-plugin": "^0.2.8",
+    "fs-extra": "3.0.1",
     "html-entities": "^1.2.1",
-    "koa": "^2.4.1",
-    "koa-bodyparser": "^4.2.0",
+    "html-webpack-plugin": "2.29.0",
+    "jest": "22.4.2",
+    "koa": "^2.5.3",
+    "koa-bodyparser": "^4.2.1",
     "koa-json": "^2.0.2",
-    "koa-logger": "^3.1.0",
-    "koa-router": "^7.3.0",
-    "lodash": "^4.17.2",
-    "moment": "^2.20.1",
+    "koa-logger": "^3.2.0",
+    "koa-router": "^7.4.0",
+    "less": "^3.8.1",
+    "less-loader": "^4.1.0",
     "node-schedule": "^1.3.0",
-    "superagent": "^3.8.2",
-    "vue": "^2.4.2",
-    "vue-loader": "^8.0.0",
-    "vue-router": "^2.4.0",
-    "vue-simple-assistive-ball": "^1.0.1",
-    "vue-touch": "^2.0.0-beta.4",
-    "vuex": "^2.4.0"
+    "object-assign": "4.1.1",
+    "postcss-flexbugs-fixes": "3.2.0",
+    "postcss-loader": "2.0.8",
+    "promise": "8.0.1",
+    "raf": "3.4.0",
+    "react": "^16.5.0",
+    "react-dev-utils": "^5.0.1",
+    "react-dom": "^16.5.0",
+    "react-router": "^4.3.1",
+    "react-router-dom": "^4.3.1",
+    "request": "^2.88.0",
+    "resolve": "1.6.0",
+    "source-map-loader": "^0.2.1",
+    "style-loader": "0.19.0",
+    "superagent": "^3.8.3",
+    "superagent-charset": "^1.2.0",
+    "sw-precache-webpack-plugin": "0.11.4",
+    "ts-jest": "22.0.1",
+    "ts-loader": "^2.3.7",
+    "tsconfig-paths-webpack-plugin": "^2.0.0",
+    "tslint": "^5.7.0",
+    "tslint-config-prettier": "^1.10.0",
+    "tslint-react": "^3.2.0",
+    "uglifyjs-webpack-plugin": "^1.1.8",
+    "url-loader": "0.6.2",
+    "urlencode": "^1.1.0",
+    "webpack": "3.8.1",
+    "webpack-dev-server": "2.9.4",
+    "webpack-manifest-plugin": "1.3.2",
+    "whatwg-fetch": "2.0.3"
   },
   "scripts": {
-    "start": "cross-env NODE_ENV=development node build/dev.js",
-    "build": "cross-env NODE_ENV=production node build/prod.js"
+    "start": "node scripts/start.js",
+    "build": "node scripts/build.js",
+    "test": "node scripts/test.js --env=jsdom",
+    "type-check": "tsc"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Ash-sc/node-spider-webapp.git"
-  },
-  "keywords": [
-    "node",
-    "spider",
-    "vue"
-  ],
-  "author": "ash",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Ash-sc/node-spider-webapp/issues"
-  },
-  "homepage": "https://github.com/Ash-sc/node-spider-webapp#readme",
   "devDependencies": {
-    "babel-core": "^6.0.0",
-    "babel-loader": "^6.0.0",
-    "babel-plugin-transform-runtime": "^6.0.0",
-    "babel-preset-es2015": "^6.0.0",
-    "babel-preset-stage-2": "^6.0.0",
-    "babel-runtime": "^6.9.0",
-    "browser-sync": "^2.11.1",
-    "browser-sync-webpack-plugin": "^1.0.1",
-    "connect-history-api-fallback": "^1.1.0",
-    "cross-env": "^3.1.3",
-    "css-loader": "^0.23.0",
-    "eslint": "^1.10.3",
-    "eslint-friendly-formatter": "^1.2.2",
-    "eslint-loader": "^1.2.0",
-    "eventsource-polyfill": "^0.9.6",
-    "extract-text-webpack-plugin": "^0.9.1",
-    "file-loader": "^0.8.4",
-    "fs-extra": "^2.1.2",
-    "gulp": "^3.9.1",
-    "gulp-csso": "^2.0.0",
-    "gulp-filter": "^4.0.0",
-    "gulp-rev": "^7.1.2",
-    "gulp-rev-replace": "^0.4.3",
-    "gulp-uglify": "^2.0.0",
-    "gulp-useref": "2.1.0",
-    "html-loader": "^0.4.3",
-    "html-webpack-plugin": "^1.7.0",
-    "http-proxy-middleware": "^0.17.2",
-    "inject-loader": "^2.0.1",
-    "json-loader": "^0.5.4",
-    "less": "^2.6.0",
-    "less-loader": "^2.2.2",
-    "node-sass": "^3.4.2",
-    "nyan-progress-webpack-plugin": "^1.1.4",
-    "sass-loader": "^3.2.0",
-    "style-loader": "^0.13.1",
-    "url-loader": "^0.5.7",
-    "vue-hot-reload-api": "^1.2.0",
-    "vue-html-loader": "^1.0.0",
-    "vue-style-loader": "^1.0.0",
-    "webpack": "^1.12.2",
-    "webpack-dev-middleware": "^1.4.0",
-    "webpack-hot-middleware": "^2.6.0"
+    "@types/jest": "^23.3.2",
+    "@types/node": "^10.9.4",
+    "@types/react": "^16.4.14",
+    "@types/react-dom": "^16.0.7",
+    "typescript": "^3.0.3"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}"
+    ],
+    "setupFiles": [
+      "<rootDir>/config/polyfills.js"
+    ],
+    "testMatch": [
+      "<rootDir>/src/**/__tests__/**/*.(j|t)s?(x)",
+      "<rootDir>/src/**/?(*.)(spec|test).(j|t)s?(x)"
+    ],
+    "testEnvironment": "node",
+    "testURL": "http://localhost",
+    "transform": {
+      "^.+\\.(js|jsx|mjs)$": "<rootDir>/node_modules/babel-jest",
+      "^.+\\.tsx?$": "<rootDir>/config/jest/typescriptTransform.js",
+      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
+      "^(?!.*\\.(js|jsx|mjs|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
+    },
+    "transformIgnorePatterns": [
+      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|ts|tsx)$"
+    ],
+    "moduleNameMapper": {
+      "^react-native$": "react-native-web"
+    },
+    "moduleFileExtensions": [
+      "web.ts",
+      "ts",
+      "web.tsx",
+      "tsx",
+      "web.js",
+      "js",
+      "web.jsx",
+      "jsx",
+      "json",
+      "node",
+      "mjs"
+    ],
+    "globals": {
+      "ts-jest": {
+        "tsConfigFile": "/Users/ash/Documents/git-projects/node-spider-webapp/tsconfig.test.json"
+      }
+    }
+  },
+  "babel": {
+    "presets": [
+      "react-app"
+    ]
   }
 }

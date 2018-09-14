@@ -3,16 +3,11 @@
 # dependencies
 /node_modules
 
-/.vscode
-/.idea
-
-server/cache/movieFiles/*
-
 # testing
 /coverage
 
 # production
-/build
+# /build
 
 # misc
 .DS_Store
@@ -24,3 +19,5 @@ server/cache/movieFiles/*
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+.vscode

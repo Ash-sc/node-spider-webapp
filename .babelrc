@@ -1,5 +1,5 @@
 {
-  "presets": ["es2015", "stage-2"],
-  "plugins": ["transform-runtime"],
-  "comments": false
+  "plugins": [
+    ["import", { "libraryName": "antd-mobile", "style": true }]
+  ]
 }
