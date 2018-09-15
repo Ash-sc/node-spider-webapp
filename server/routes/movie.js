@@ -16,7 +16,7 @@ router.post('/list', async function (ctx) {
   const { type } = ctx.request.body
 
   const result = await new Promise((resolve, reject) => {
-    const targetUrl = type === 'nowPlayingList'
+    const targetUrl = type === 'inTheaters'
       ? 'https://movie.douban.com/cinema/nowplaying/hangzhou/'
       : 'https://movie.douban.com/cinema/later/hangzhou/'
 
@@ -30,13 +30,15 @@ router.post('/list', async function (ctx) {
         const $ = cheerio.load(res.text)
         const movies = []
 
-        if (type === 'nowPlayingList') {
+        if (type === 'inTheaters') {
           $('#nowplaying .lists .list-item ul').each((idx, element) => {
             movies.push({
               link: $(element).find('.poster a').attr('href'),
               image: $(element).find('.poster a img').attr('src'),
               name: $(element).find('.stitle a').attr('title'),
-              score: $(element).find('.srating .subject-rate').html()
+              score: $(element).find('.srating .subject-rate').html(),
+              director: $(element).parent().attr('data-director'),
+              actors: $(element).parent().attr('data-actors')
             })
           })
         } else {
@@ -45,6 +47,9 @@ router.post('/list', async function (ctx) {
               link: $(element).find('.thumb').attr('href'),
               image: $(element).find('img').attr('src'),
               name: entities.decode($(element).find('.intro h3 a').html()),
+              date: entities.decode($($(element).find('.intro ul .dt')[0]).html()),
+              area: entities.decode($($(element).find('.intro ul .dt')[2]).html()),
+              popular: entities.decode($(element).find('.intro ul .last span').html()),
               preview: $(element).find('.intro .trailer_icon').attr('href')
             })
           })
