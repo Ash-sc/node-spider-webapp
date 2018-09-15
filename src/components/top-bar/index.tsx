@@ -13,7 +13,7 @@ class TopBar extends React.Component<PropsType> {
   public state = {
     open: false,
     appList: [
-      { name: 'Movie View', link: '/movie-list' },
+      { name: 'Movie View', link: '/movie-list/inTheaters' },
       { name: 'Online Reader', link: '/search-novel' }
     ]
   }
