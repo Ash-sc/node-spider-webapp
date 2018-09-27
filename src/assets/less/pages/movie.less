@@ -1,4 +1,5 @@
-.movie-body {
+.movie-body,
+.movie-detail {
   position: relative;
   height: 100%;
   overflow: auto;
@@ -33,6 +34,29 @@
 
     .am-tab-bar-tab-title {
       font-size: 14px;
+    }
+  }
+}
+
+.movie-detail {
+  .movie-section {
+    .am-list-body {
+      padding-bottom: 0;
+
+      .am-list-title {
+        font-size: 20px;
+      }
+
+      .am-list-brief {
+        margin-top: 2px;
+      }
+    }
+
+    .movie-item {
+      .am-list-thumb > img {
+        width: 117px;
+        height: 144px;
+      }
     }
   }
 }

@@ -7,6 +7,13 @@ class MovieApi {
       url: '/movie/list'
     })
   }
+
+  public movieDetail (id: string) {
+    return api({
+      data: { id },
+      url: '/movie/detail'
+    })
+  }
 }
 
 export default new MovieApi()

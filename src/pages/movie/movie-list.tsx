@@ -61,7 +61,8 @@ class MovieList extends React.Component<PropsType, any> {
   }
 
   public movieDetail = (link: string) => {
-    console.log(link, 331)
+    const id = link.split('/').slice(-2)[0]
+    this.props.history.push('/movie-detail/' + id)
   }
 
   public changeMovieType = (type: string) => {
