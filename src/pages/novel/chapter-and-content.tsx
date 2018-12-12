@@ -69,7 +69,7 @@ class NovelSearch extends React.Component<PropsType, any> {
         .getPropertyValue('line-height'),
       10
     )
-    const sectionHeight = document.documentElement.clientHeight - 45
+    const sectionHeight = (document.documentElement as HTMLElement).clientHeight - 45
     const transformHeight = sectionHeight - (sectionHeight % contentAttr)
     this.setState({
       transformHeight
@@ -80,6 +80,11 @@ class NovelSearch extends React.Component<PropsType, any> {
   public backToChapter = () => {
     this.setState({
       currentView: 'chapter'
+    }, () => {
+      setTimeout(() => {
+        const activeDom = document.querySelector('.am-list-item.active') as HTMLDivElement
+        activeDom.scrollIntoView()
+      })
     })
   }
 
@@ -99,7 +104,7 @@ class NovelSearch extends React.Component<PropsType, any> {
         })
         this.contentRef.current.style.transform = 'translateY(0)'
         // 更新路由
-        this.props.history.replace(
+        this.props.history.push(
           '/novel-content/' + this.props.match.params.link + '/' + i
         )
       },
@@ -119,7 +124,7 @@ class NovelSearch extends React.Component<PropsType, any> {
 
   // 点击屏幕左右 上下翻屏
   public scrollContent = (e: any) => {
-    const windowWidth = document.documentElement.clientWidth
+    const windowWidth = (document.documentElement as HTMLElement).clientWidth
     const sectionHeight = parseInt(
       window.getComputedStyle(e.target).getPropertyValue('height'),
       10
