@@ -167,8 +167,6 @@ router.post('/detail', async function (ctx) {
       })
   })
 
-  console.log(result, 22)
-
   ctx.body = {
     result: typeof result === 'object' ? 0 : 1,
     data: typeof result === 'object' ? result : [],
