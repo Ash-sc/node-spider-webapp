@@ -84,6 +84,7 @@ class NovelSearch extends React.Component<PropsType, any> {
       setTimeout(() => {
         const activeDom = document.querySelector('.am-list-item.active') as HTMLDivElement
         activeDom.scrollIntoView()
+        document.body.scrollIntoView()
       })
     })
   }
