@@ -2,14 +2,9 @@ import * as React from 'react'
 import NovelApi from '../../api/novel'
 import { SearchBar, ActivityIndicator, List } from 'antd-mobile'
 import { withRouter } from 'react-router-dom'
-import { RouteComponentProps } from 'react-router'
 
 const Item = List.Item
 const Brief = Item.Brief
-
-interface PathParamsType {
-  key?: string
-}
 
 interface Novel {
   classify: string
@@ -20,91 +15,72 @@ interface Novel {
   updateTime: string
 }
 
-type PropsType = RouteComponentProps<PathParamsType> & {}
+const NovelSearch = (props: any) => {
 
-class NovelSearch extends React.Component<PropsType, {}> {
-  public state = {
-    loadingData: false,
-    novelList: []
-  }
-
-  constructor(props: any) {
-    super(props)
-    this.searchNovel = this.searchNovel.bind(this)
-  }
+  const [loadingData, setLoadingData] = (React as any).useState(false)
+  const [novelList, setNovelList] = (React as any).useState([])
 
   // 搜索小说
-  public searchNovel(key: string) {
+  function searchNovel(key: string) {
     if (!key) {
-      return this.setState({
-        novelList: []
-      })
+      return setNovelList([])
     }
-    this.setState({
-      loadingData: true
-    })
+    setLoadingData(true)
     return NovelApi.searchNovel(key).then(
       data => {
-        this.setState({
-          novelList: data,
-          loadingData: false
-        })
+        setNovelList(data)
+        setLoadingData(false)
       },
       () => {
-        this.setState({
-          loadingData: false
-        })
+        setLoadingData(false)
       }
     )
   }
 
   // 查看章节信息
-  public viewChapterList(link: string) {
-    this.props.history.push('/novel-content/' + btoa(link) + '/chapter')
+  function viewChapterList(link: string) {
+    props.history.push('/novel-content/' + btoa(link) + '/chapter')
   }
-
-  public render() {
-    return (
-      <div className="novel-body">
-        <SearchBar
-          placeholder="search novel by name or author"
-          maxLength={20}
-          onClear={() => this.searchNovel('')}
-          onSubmit={this.searchNovel}
+  return (
+    <div className="novel-body">
+      <SearchBar
+        placeholder="search novel by name or author"
+        maxLength={20}
+        onClear={() => searchNovel('')}
+        onSubmit={searchNovel}
+      />
+      {novelList.length ? (
+        <List renderHeader='RESULTS' className="my-list">
+          {novelList.map((novel: Novel, i: number) => (
+            <Item
+              key={i}
+              arrow="horizontal"
+              multipleLine
+              onClick={() => viewChapterList(novel.articleLink)}
+              platform="android"
+            >
+              {novel.articleName} {novel.classify}
+              <Brief>
+                {novel.latestCharterName}
+                <br />
+                {novel.authorName} -- {novel.updateTime}
+              </Brief>
+            </Item>
+          ))}
+        </List>
+      ) : loadingData ? (
+        ''
+      ) : (
+        <span className="no-result-text">NO RESULTS FOUND!</span>
+      )}
+      {loadingData && (
+        <ActivityIndicator
+          text="Loading..."
+          className="full-screen-loading"
         />
-        {this.state.novelList.length ? (
-          <List renderHeader={() => 'RESULTS'} className="my-list">
-            {this.state.novelList.map((novel: Novel, i) => (
-              <Item
-                key={i}
-                arrow="horizontal"
-                multipleLine
-                onClick={() => this.viewChapterList(novel.articleLink)}
-                platform="android"
-              >
-                {novel.articleName} {novel.classify}
-                <Brief>
-                  {novel.latestCharterName}
-                  <br />
-                  {novel.authorName} -- {novel.updateTime}
-                </Brief>
-              </Item>
-            ))}
-          </List>
-        ) : this.state.loadingData ? (
-          ''
-        ) : (
-          <span className="no-result-text">NO RESULTS FOUND!</span>
-        )}
-        {this.state.loadingData && (
-          <ActivityIndicator
-            text="Loading..."
-            className="full-screen-loading"
-          />
-        )}
-      </div>
-    )
-  }
+      )}
+    </div>
+  )
 }
 
 export default withRouter(NovelSearch)

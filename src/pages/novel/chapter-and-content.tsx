@@ -2,18 +2,12 @@ import * as React from 'react'
 import NovelApi from '../../api/novel'
 import { ActivityIndicator, List, Icon, Flex } from 'antd-mobile'
 import { withRouter } from 'react-router-dom'
-import { RouteComponentProps } from 'react-router'
 
 const Item = List.Item
 
-interface PathParamsType {
-  link: string
-  index?: string
-}
-
 interface ChapterList {
   name: string
-  chapterList: ChapterInfo
+  chapterList: ChapterInfo[]
 }
 
 interface ChapterInfo {
@@ -21,43 +15,33 @@ interface ChapterInfo {
   href: string
 }
 
-type PropsType = RouteComponentProps<PathParamsType> & {}
+const NovelSearch = (props: any) => {
+  const [articleLink, setArticleLink] = React.useState('')
+  const [loadingContent, setLoadingContent] = React.useState(true)
+  const [novelName, setNovelName] = React.useState('')
+  const [chapterList, setChapterList] = React.useState([] as ChapterInfo[])
+  // const [order, setOrder] = (React as any).useState(-1)
+  const [currentView, setCurrentView] = React.useState('chapter')
+  const [currentIndex, setCurrentIndex] = React.useState(-1)
+  const [content, setContent] = React.useState('')
+  const [transformHeight, setTransformHeight] = React.useState(0)
+  const [currentTransformHeight, setCurrentTransformHeight] = React.useState(0)
 
-class NovelSearch extends React.Component<PropsType, any> {
-  private contentRef = React.createRef<any>()
-
-  constructor(props: PropsType) {
-    super(props)
-    this.state = {
-      articleLink: '',
-      loadingContent: true,
-      novelName: '',
-      chapterList: [],
-      order: -1,
-      currentView: 'chapter',
-      currentIndex: -1,
-      content: '',
-      transformHeight: 0,
-      currentTransformHeight: 0
-    }
-  }
-
-  public componentDidMount() {
-    this.setState({ articleLink: atob(this.props.match.params.link) })
+  React.useEffect(() => {
+    setArticleLink(atob(props.match.params.link))
     // 获取章节信息
-    NovelApi.getChapter(atob(this.props.match.params.link)).then(
+    NovelApi.getChapter(atob(props.match.params.link)).then(
       (data: ChapterList) => {
-        this.setState({
-          novelName: data.name,
-          loadingContent: false,
-          chapterList: data.chapterList
-        })
+        setNovelName(data.name)
+        setLoadingContent(false)
+        setChapterList(data.chapterList)
+
         if (
-          this.props.match.params.index &&
-          this.props.match.params.index !== 'chapter'
+          props.match.params.index &&
+          props.match.params.index !== 'chapter'
         ) {
-          const index = parseInt(this.props.match.params.index, 10)
-          this.viewChapter(data.chapterList[index].href, index)
+          const index = parseInt(props.match.params.index, 10)
+          viewChapter(data.chapterList[index].href, index)
         }
       }
     )
@@ -65,72 +49,61 @@ class NovelSearch extends React.Component<PropsType, any> {
     // 计算屏幕需要滚动的高度
     const contentAttr = parseInt(
       window
-        .getComputedStyle(this.contentRef.current)
+        .getComputedStyle((document.querySelector('#contentRef') as HTMLDivElement))
         .getPropertyValue('line-height'),
       10
     )
     const sectionHeight = (document.documentElement as HTMLElement).clientHeight - 45
-    const transformHeight = sectionHeight - (sectionHeight % contentAttr)
-    this.setState({
-      transformHeight
-    })
-  }
+    setTransformHeight(sectionHeight - (sectionHeight % contentAttr))
+  })
 
   // 返回章节列表
-  public backToChapter = () => {
-    this.setState({
-      currentView: 'chapter'
-    }, () => {
-      setTimeout(() => {
-        const activeDom = document.querySelector('.am-list-item.active') as HTMLDivElement
-        activeDom.scrollIntoView()
-        document.body.scrollIntoView()
-      })
+  function backToChapter() {
+    setCurrentView('chapter')
+    setTimeout(() => {
+      const activeDom = document.querySelector('.am-list-item.active') as HTMLDivElement
+      activeDom.scrollIntoView()
+      document.body.scrollIntoView()
     })
   }
 
   // 点击章节 查看内容
-  public viewChapter = (href: string, i: number) => {
-    this.setState({
-      loadingContent: true
-    })
-    NovelApi.getContent(this.state.articleLink + href).then(
+  function viewChapter(href: string, i: number) {
+    setLoadingContent(true)
+    NovelApi.getContent(articleLink + href).then(
       data => {
-        this.setState({
-          loadingContent: false,
-          content: data,
-          currentView: 'content',
-          currentIndex: i,
-          currentTransformHeight: 0
-        })
-        this.contentRef.current.style.transform = 'translateY(0)'
+        setLoadingContent(false)
+        setContent(data as any)
+        setCurrentView('content')
+        setCurrentIndex(i)
+        setCurrentTransformHeight(0);
+        (document.querySelector('#contentRef') as HTMLDivElement).style.transform = 'translateY(0)'
         // 更新路由
-        this.props.history.push(
-          '/novel-content/' + this.props.match.params.link + '/' + i
+        props.history.push(
+          '/novel-content/' + props.match.params.link + '/' + i
         )
       },
       () => {
-        this.setState({ loadingContent: false, currentTransformHeight: 0 })
-        this.contentRef.current.style.transform = 'translateY(0)'
+        setLoadingContent(false)
+        setCurrentTransformHeight(0);
+        (document.querySelector('#contentRef') as HTMLDivElement).style.transform = 'translateY(0)'
       }
     )
   }
 
   // 上一章  下一章
-  public changeContent = (type: number) => {
-    const { chapterList, currentIndex } = this.state
-    const href = chapterList[currentIndex + type].href
-    this.viewChapter(href, currentIndex + type)
+  function changeContent(type: number) {
+    const { href } = chapterList[currentIndex + type]
+    viewChapter(href, currentIndex + type)
   }
 
   // 点击屏幕左右 上下翻屏
-  public scrollContent = (e: any) => {
+  function scrollContent (e: any) {
     const windowWidth = (document.documentElement as HTMLElement).clientWidth
     const sectionHeight = parseInt(
       window.getComputedStyle(e.target).getPropertyValue('height'),
       10
     )
-    const { currentTransformHeight, transformHeight } = this.state
     const newTransformHeight =
       e.pageX > windowWidth / 2
         ? currentTransformHeight + transformHeight
@@ -147,93 +120,89 @@ class NovelSearch extends React.Component<PropsType, any> {
       )}px)`
     }
     if (newTransformHeight > 0 && newTransformHeight < sectionHeight) {
-      this.setState({
-        currentTransformHeight: newTransformHeight
-      })
+      setCurrentTransformHeight(newTransformHeight)
     }
   }
 
-  public render() {
-    return (
-      <div className="novel-body">
-        {!this.state.loadingContent &&
-          this.state.currentView === 'content' && (
-            <Icon
-              type={'left'}
-              className="back-icon"
-              onClick={this.backToChapter}
-            />
-          )}
-        {this.state.chapterList.length ? (
-          <List
-            renderHeader={() => this.state.novelName + '-- 章节列表'}
-            className={
-              'chapter-section' +
-              (this.state.currentView === 'content' ? ' hide' : '')
-            }
-          >
-            {this.state.chapterList.map((chapter: ChapterInfo, i: number) => (
-              <Item
-                key={chapter.href}
-                onClick={() => this.viewChapter(chapter.href, i)}
-                className={this.state.currentIndex === i ? 'active' : ''}
-              >
-                {chapter.title}
-              </Item>
-            ))}
-          </List>
-        ) : this.state.loadingContent ? (
-          ''
-        ) : (
-          <span className="no-result-text">NO RESULTS FOUND!</span>
-        )}
-        {this.state.loadingContent && (
-          <ActivityIndicator
-            text="Loading..."
-            className="full-screen-loading"
+  return (
+    <div className="novel-body">
+      {!loadingContent &&
+        currentView === 'content' && (
+          <Icon
+            type={'left'}
+            className="back-icon"
+            onClick={backToChapter}
           />
         )}
-        <div
-          className="content-section"
-          style={{
-            display: this.state.currentView === 'content' ? 'block' : 'none'
-          }}
+      {chapterList.length ? (
+        <List
+          renderHeader={novelName + '-- 章节列表'}
+          className={
+            'chapter-section' +
+            (currentView === 'content' ? ' hide' : '')
+          }
         >
-          <div
-            ref={this.contentRef}
-            className="content-paragraph"
-            onClick={this.scrollContent}
-          >
-            {this.state.chapterList.length &&
-              this.state.currentView === 'content' && (
-                <p className="chapter-title">
-                  {this.state.chapterList[this.state.currentIndex].title}
-                  <br />
-                  <br />
-                </p>
-              )}
-            <p
-              className="main-content"
-              dangerouslySetInnerHTML={{ __html: this.state.content }}
-            />
-            <Flex className="chapter-jump">
-              {this.state.currentIndex !== 0 && (
-                <Flex.Item onClick={() => this.changeContent(-1)}>
-                  上一章
-                </Flex.Item>
-              )}
-              {this.state.currentIndex !==
-                this.state.chapterList.length - 1 && (
-                <Flex.Item onClick={() => this.changeContent(1)}>
-                  下一章
-                </Flex.Item>
-              )}
-            </Flex>
-          </div>
+          {chapterList.map((chapter: ChapterInfo, i: number) => (
+            <Item
+              key={chapter.href}
+              onClick={() => viewChapter(chapter.href, i)}
+              className={currentIndex === i ? 'active' : ''}
+            >
+              {chapter.title}
+            </Item>
+          ))}
+        </List>
+      ) : loadingContent ? (
+        ''
+      ) : (
+        <span className="no-result-text">NO RESULTS FOUND!</span>
+      )}
+      {loadingContent && (
+        <ActivityIndicator
+          text="Loading..."
+          className="full-screen-loading"
+        />
+      )}
+      <div
+        className="content-section"
+        style={{
+          display: currentView === 'content' ? 'block' : 'none'
+        }}
+      >
+        <div
+          id="contentRef"
+          className="content-paragraph"
+          onClick={scrollContent}
+        >
+          {chapterList.length &&
+            currentView === 'content' && (
+              <p className="chapter-title">
+                {(chapterList[currentIndex] as any).title}
+                <br />
+                <br />
+              </p>
+            )}
+          <p
+            className="main-content"
+            dangerouslySetInnerHTML={{ __html: content }}
+          />
+          <Flex className="chapter-jump">
+            {currentIndex !== 0 && (
+              <Flex.Item onClick={() => changeContent(-1)}>
+                上一章
+              </Flex.Item>
+            )}
+            {currentIndex !==
+              chapterList.length - 1 && (
+              <Flex.Item onClick={() => changeContent(1)}>
+                下一章
+              </Flex.Item>
+            )}
+          </Flex>
         </div>
       </div>
-    )
-  }
+    </div>
+  )
 }
 
 export default withRouter(NovelSearch)
