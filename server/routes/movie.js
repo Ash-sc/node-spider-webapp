@@ -34,7 +34,7 @@ router.post('/list', async function (ctx) {
           $('#nowplaying .lists .list-item ul').each((idx, element) => {
             movies.push({
               link: $(element).find('.poster a').attr('href'),
-              image: $(element).find('.poster a img').attr('src'),
+              image: $(element).find('.poster a img').attr('src').replace('.jpg', '.webp'),
               name: $(element).find('.stitle a').attr('title'),
               score: $(element).find('.srating .subject-rate').html(),
               director: $(element).parent().attr('data-director'),
@@ -45,7 +45,7 @@ router.post('/list', async function (ctx) {
           $('#showing-soon .mod').each((idx, element) => {
             movies.push({
               link: $(element).find('.thumb').attr('href'),
-              image: $(element).find('img').attr('src'),
+              image: $(element).find('img').attr('src').replace('.jpg', '.webp'),
               name: entities.decode($(element).find('.intro h3 a').html()),
               date: entities.decode($($(element).find('.intro ul .dt')[0]).html()),
               area: entities.decode($($(element).find('.intro ul .dt')[2]).html()),
@@ -148,7 +148,7 @@ router.post('/detail', async function (ctx) {
         }, '').substr(1)
         const score = $('#interest_sectl .rating_num')[0].children.length && $('#interest_sectl .rating_num')[0].children[0].data
         const synopsis = $('#link-report span[property="v:summary"]')[0].children[0].data.replace(/\s/g, '')
-        const imageLink = $('#mainpic .nbgnbg img')[0].attribs.src
+        const imageLink = $('#mainpic .nbgnbg img')[0].attribs.src.replace('.jpg', '.webp')
         const videoLink = $('.related-pic-video').length ? await getMovieVideo($('.related-pic-video')[0].attribs.href, id) : ''
         const moment = await getMoment(id)
 
