@@ -15,6 +15,7 @@ interface PathParamsType {
 interface ChapterList {
   name: string
   chapterList: ChapterInfo
+  downloadLink?: string
 }
 
 interface ChapterInfo {
@@ -33,8 +34,8 @@ class NovelSearch extends React.Component<PropsType, any> {
     this.state = {
       articleLink: '',
       loadingContent: true,
-      novelName: '',
       chapterList: [],
+      downloadLink: '',
       order: -1,
       currentView: 'chapter',
       currentIndex: -1,
@@ -51,9 +52,9 @@ class NovelSearch extends React.Component<PropsType, any> {
     NovelApi.getChapter(atob(this.props.match.params.link)).then(
       (data: ChapterList) => {
         this.setState({
-          novelName: data.name,
           loadingContent: false,
-          chapterList: data.chapterList
+          chapterList: data.chapterList,
+          downloadLink: data.downloadLink
         })
         if (
           this.props.match.params.index &&
@@ -173,12 +174,17 @@ class NovelSearch extends React.Component<PropsType, any> {
       <div className="novel-body">
         {this.state.chapterList.length ? (
           <List
-            renderHeader={() => this.state.novelName + '-- 章节列表'}
+            renderHeader={() => this.props.match.params.novelName + '-- 章节列表'}
             className={
               'chapter-section' +
               (this.state.currentView === 'content' ? ' hide' : '')
             }
           >
+            {this.state.downloadLink &&
+              <Item onClick={() => window.open(this.state.downloadLink)} >
+                &lt;&lt; 下载本书 &gt;&gt;
+              </Item>
+            }
             {this.state.chapterList.map((chapter: ChapterInfo, i: number) => (
               <Item
                 key={chapter.href}

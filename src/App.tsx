@@ -7,9 +7,9 @@ import * as Sentry from '@sentry/browser'
 
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 
-// Sentry.init({
-//  dsn: "https://45a6f451b6ae4e649a6c0750a80696a8@sentry.io/1427911"
-// })
+Sentry.init({
+ dsn: "https://45a6f451b6ae4e649a6c0750a80696a8@sentry.io/1427911"
+})
 class App extends React.Component {
 
   public componentDidCatch(error: any, errorInfo: any) {

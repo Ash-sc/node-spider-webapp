@@ -43,53 +43,44 @@ router.post('/search', async ctx => {
     searchKey
   } = ctx.request.body
 
-  // const result1 = await new Promise((resolve) => {
-  //   request.get(`http://www.xxsa.net/modules/article/search.php?ie=gbk&searchkey=${urlencode(searchKey, 'gbk')}`)
-  //   .charset('gbk')
-  //   .end((error, resp) => {
-  //     if (error) {
-  //       console.error('search error : ', error)
-  //       return resolve({
-  //         result: 1,
-  //         data: [],
-  //         errorInfo: error
-  //       })
-  //     } else {
-  //       const $ = cheerio.load(resp.text)
-  //       const item = []
-  //       $('#newscontent .l ul li').each((idx, element) => {
-  //         const $element = $(element)
-  //         item.push({
-  //           classify: $element.find('.s1').text().replace(/小说|\[|]/g, ''),
-  //           articleName: $element.find('.s2 a').text(),
-  //           articleLink: $element.find('.s2 a').attr('href'),
-  //           latestCharterName: $element.find('.s3 a').text(),
-  //           latestCharterLink: $element.find('.s3 a').attr('href'),
-  //           authorName: $element.find('.s4 a').text(),
-  //           authorLink: $element.find('.s4 a').attr('href'),
-  //           updateTime: $element.find('.s5').text(),
-  //         });
-  //       });
-  //       return resolve({
-  //         result: 0,
-  //         data: item,
-  //         errorInfo: ''
-  //       })
-  //     }
-  //   })
-  // })
+  const result1 = new Promise((resolve) => {
+    request.get(`http://www.xxsa.net/modules/article/search.php?ie=gbk&searchkey=${urlencode(searchKey, 'gbk')}`)
+    .charset('gbk')
+    .end((error, resp) => {
+      if (error) {
+        console.error('search error : ', error)
+        return resolve([])
+      } else {
+        const $ = cheerio.load(resp.text)
+        const item = []
+        const resultList = $('.main .grid tr');
+        $('.main .grid tr').each((idx, element) => {
+          if (idx === 0) return
+          const $element = $(element)
+          const novelInfo = $element.find('td')
+          item.push({
+            classify: '',
+            articleName: $(novelInfo[0]).find('a').text(),
+            articleLink: $(novelInfo[0]).find('a').attr('href'),
+            latestCharterName: $(novelInfo[1]).find('a').text(),
+            latestCharterLink: $(novelInfo[1]).find('a').attr('href'),
+            authorName: $(novelInfo[2]).text(),
+            authorLink: '',
+            updateTime: '20' + $(novelInfo[4]).text(),
+          });
+        });
+        return resolve(item)
+      }
+    })
+  })
 
-  const result = await new Promise((resolve) => {
+  const result2 = new Promise((resolve) => {
     request.get(`http://www.snwx8.com/modules/article/search.php?searchkey=${urlencode(searchKey, 'gbk')}`)
       .charset('gbk')
       .end((error, resp) => {
         if (error) {
           console.error('search error : ', error)
-          return resolve({
-            result: 1,
-            data: [],
-            errorInfo: error
-          })
+          return resolve([])
         } else {
           const $ = cheerio.load(resp.text)
           const item = []
@@ -106,13 +97,19 @@ router.post('/search', async ctx => {
               updateTime: $element.find('.s5').text(),
             });
           });
-          return resolve({
-            result: 0,
-            data: item,
-            errorInfo: ''
-          })
+          return resolve(item)
         }
       })
+  })
+
+  const result = {
+    result: 0,
+    data: [],
+    errorInfo: ''
+  }
+
+  await Promise.all([result1, result2]).then(([res1, res2]) => {
+    result.data = [ ...res2, ...res1 ]
   })
 
   ctx.body = result
@@ -128,7 +125,7 @@ router.post('/get-chapter', async ctx => {
   const result = await new Promise(resolve => {
     request.get(link)
       .charset('gbk')
-      .end((error, resp) => {
+      .end(async (error, resp) => {
         if (error) {
           console.error('get charter list error : ', error)
           return resolve({
@@ -137,26 +134,50 @@ router.post('/get-chapter', async ctx => {
             data: {}
           })
         } else {
-          const $ = cheerio.load(resp.text)
+          let articleName = ''
           const chapterList = [] // 章节信息列表
-          const articleName = $($('.infotitle h1')[0]).text()
-          $('#list dl dd a').each((idx, element) => {
-            const $element = $(element)
-            chapterList.push({
-              title: $element.attr('title'),
-              href: $element.attr('href'),
+          const $ = cheerio.load(resp.text)
+          if (link.indexOf('xxsa.net > 0')) {
+            await new Promise(resolve2 => {
+              const dirLinks = $('#diralinks').attr('href')
+              articleName = $('.con_txt .info h1 a').text()
+              request.get(dirLinks)
+                .charset('gbk')
+                .end((err, response) => {
+                  if (err) {
+                    console.error('get charter list error : ', error)
+                    return resolve2({})
+                  } else {
+                    const $$ = cheerio.load(response.text)
+                    $$('.novel_list .book_article_listtext').each((idx, element) => {
+                      $$(element).find('dd').each((i, ele) => {
+                        chapterList.push({
+                          title: $$(ele).find('a').text(),
+                          href: dirLinks + $$(ele).find('a').attr('href'),
+                        })
+                      })
+                    })
+
+                    return resolve2({})
+                  }
+                })
             })
-          })
-          console.info('get charter list success !')
-          if (ctx.request.body.download === 'yes') {
-            console.info('start downloading article ...')
-            getContent(0, chapterList, link, articleName)
+          } else {
+            articleName = $($('.infotitle h1')[0]).text()
+            $('#list dl dd a').each((idx, element) => {
+              const $element = $(element)
+              chapterList.push({
+                title: $element.attr('title'),
+                href: $element.attr('href'),
+              })
+            })
           }
           return resolve({
             result: 0,
             data: {
               chapterList,
-              name: articleName
+              name: articleName,
+              downloadLink: link.indexOf('xxsa.net > 0') ? ('http://www.xxsa.net/modules/article/txtarticle.php?id=' + $('#down_txt').attr('href').match(/\d+/gi)[0]) : ''
             },
             errorInfo: ''
           })
@@ -186,6 +207,11 @@ router.post('/get-content', async ctx => {
         } else {
           console.info('get charter content success !')
           const $ = cheerio.load(resp.text)
+          if (href.indexOf('xxsa.net > 0')) {
+
+          } else {
+            
+          }
           const content = unescape($($('#BookText')[0]).html()
               .replace(/&#x/g, '%u')
               .replace(/;/g, '')
