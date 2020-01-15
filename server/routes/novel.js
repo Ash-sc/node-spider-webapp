@@ -43,6 +43,42 @@ router.post('/search', async ctx => {
     searchKey
   } = ctx.request.body
 
+  // const result1 = await new Promise((resolve) => {
+  //   request.get(`http://www.xxsa.net/modules/article/search.php?ie=gbk&searchkey=${urlencode(searchKey, 'gbk')}`)
+  //   .charset('gbk')
+  //   .end((error, resp) => {
+  //     if (error) {
+  //       console.error('search error : ', error)
+  //       return resolve({
+  //         result: 1,
+  //         data: [],
+  //         errorInfo: error
+  //       })
+  //     } else {
+  //       const $ = cheerio.load(resp.text)
+  //       const item = []
+  //       $('#newscontent .l ul li').each((idx, element) => {
+  //         const $element = $(element)
+  //         item.push({
+  //           classify: $element.find('.s1').text().replace(/小说|\[|]/g, ''),
+  //           articleName: $element.find('.s2 a').text(),
+  //           articleLink: $element.find('.s2 a').attr('href'),
+  //           latestCharterName: $element.find('.s3 a').text(),
+  //           latestCharterLink: $element.find('.s3 a').attr('href'),
+  //           authorName: $element.find('.s4 a').text(),
+  //           authorLink: $element.find('.s4 a').attr('href'),
+  //           updateTime: $element.find('.s5').text(),
+  //         });
+  //       });
+  //       return resolve({
+  //         result: 0,
+  //         data: item,
+  //         errorInfo: ''
+  //       })
+  //     }
+  //   })
+  // })
+
   const result = await new Promise((resolve) => {
     request.get(`http://www.snwx8.com/modules/article/search.php?searchkey=${urlencode(searchKey, 'gbk')}`)
       .charset('gbk')

@@ -4,31 +4,26 @@ import { withRouter } from 'react-router-dom'
 import { RouteComponentProps } from 'react-router'
 
 interface PathParamsType {
-  id?: string
+  id?: string,
+  novelName?: string
 }
 
 type PropsType = RouteComponentProps<PathParamsType> & {}
 
 class TopBar extends React.Component<PropsType> {
-  public state = {}
-
-  public menuJump(link: string) {
-    this.props.history.push(link)
-    this.setState({
-      open: false
-    })
-  }
-
   public onOpenChange = () => {
     const { pathname } = this.props.history.location
     if (pathname.startsWith('/novel-content') && pathname.indexOf('chapter') < 0) {
       const event = new Event('toggle-view')
       window.dispatchEvent(event)
+    } else {
+      this.props.history.push('/search-novel')
     }
-    this.props.history.goBack()
   }
 
   public render() {
+    const pathArr = this.props.location.pathname.split('/')
+
     return (
       <div className="top-bar">
         <NavBar
@@ -38,7 +33,7 @@ class TopBar extends React.Component<PropsType> {
           ]}
           rightContent={[]}
         >
-          Web App
+        { pathArr[1] ==='novel-content' ? pathArr[4] : ''}
         </NavBar>
       </div>
     )

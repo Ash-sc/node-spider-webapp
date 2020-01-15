@@ -9,6 +9,7 @@ const Item = List.Item
 interface PathParamsType {
   link: string
   index?: string
+  novelName?: string
 }
 
 interface ChapterList {
@@ -78,6 +79,9 @@ class NovelSearch extends React.Component<PropsType, any> {
     })
 
     this.toggleEvent = window.addEventListener('toggle-view', () => {
+      if (this.state.currentView === 'chapter') {
+        return this.props.history.push('/search-novel')
+      }
       this.backToChapter()
     })
   }
@@ -116,9 +120,7 @@ class NovelSearch extends React.Component<PropsType, any> {
         })
         this.contentRef.current.style.transform = 'translateY(0)'
         // 更新路由
-        this.props.history.push(
-          '/novel-content/' + this.props.match.params.link + '/' + i
-        )
+        this.props.history.push(`/novel-content/${this.props.match.params.link}/${i}/${this.props.match.params.novelName}`)
       },
       () => {
         this.setState({ loadingContent: false })

@@ -25,7 +25,8 @@ type PropsType = RouteComponentProps<PathParamsType> & {}
 class NovelSearch extends React.Component<PropsType, {}> {
   public state = {
     loadingData: false,
-    novelList: []
+    novelList: [],
+    key: ''
   }
 
   constructor(props: any) {
@@ -37,11 +38,13 @@ class NovelSearch extends React.Component<PropsType, {}> {
   public searchNovel(key: string) {
     if (!key) {
       return this.setState({
-        novelList: []
+        novelList: [],
+        key: ''
       })
     }
     this.setState({
-      loadingData: true
+      loadingData: true,
+      key
     })
     return NovelApi.searchNovel(key).then(
       data => {
@@ -59,8 +62,8 @@ class NovelSearch extends React.Component<PropsType, {}> {
   }
 
   // 查看章节信息
-  public viewChapterList(link: string) {
-    this.props.history.push('/novel-content/' + btoa(link) + '/chapter')
+  public viewChapterList(link: string, novelName: string) {
+    this.props.history.push(`/novel-content/${btoa(link)}/chapter/${novelName}`)
   }
 
   public render() {
@@ -79,7 +82,7 @@ class NovelSearch extends React.Component<PropsType, {}> {
                 key={i}
                 arrow="horizontal"
                 multipleLine
-                onClick={() => this.viewChapterList(novel.articleLink)}
+                onClick={() => this.viewChapterList(novel.articleLink, novel.articleName)}
                 platform="android"
               >
                 {novel.articleName} {novel.classify}
@@ -94,7 +97,7 @@ class NovelSearch extends React.Component<PropsType, {}> {
         ) : this.state.loadingData ? (
           ''
         ) : (
-          <span className="no-result-text">NO RESULTS FOUND!</span>
+        <span className="no-result-text">{this.state.key ? '没有搜索到，换一本？' : '请根据关键字进行搜索'}</span>
         )}
         {this.state.loadingData && (
           <ActivityIndicator
