@@ -22,12 +22,6 @@ class MovieList extends React.Component<PropsType, any> {
       apps: [
         {
           icon:
-            'http://web-site-files.ashshen.cc/spider-web-app/movie.svg',
-          text: 'Movie',
-          path: '/movie-list/inTheaters'
-        },
-        {
-          icon:
             'http://web-site-files.ashshen.cc/spider-web-app/novel.svg',
           text: 'Novel',
           path: '/search-novel'

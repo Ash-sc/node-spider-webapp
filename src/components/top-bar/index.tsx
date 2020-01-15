@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Drawer, List, NavBar, Icon } from 'antd-mobile'
+import { NavBar, Icon } from 'antd-mobile'
 import { withRouter } from 'react-router-dom'
 import { RouteComponentProps } from 'react-router'
 
@@ -10,19 +10,7 @@ interface PathParamsType {
 type PropsType = RouteComponentProps<PathParamsType> & {}
 
 class TopBar extends React.Component<PropsType> {
-  public state = {
-    open: false,
-    appList: [
-      { name: 'Movie View', link: '/movie-list/inTheaters' },
-      { name: 'Online Reader', link: '/search-novel' }
-    ]
-  }
-
-  public onOpenChange = () => {
-    this.setState({
-      open: !this.state.open
-    })
-  }
+  public state = {}
 
   public menuJump(link: string) {
     this.props.history.push(link)
@@ -31,32 +19,27 @@ class TopBar extends React.Component<PropsType> {
     })
   }
 
+  public onOpenChange = () => {
+    const { pathname } = this.props.history.location
+    if (pathname.startsWith('/novel-content') && pathname.indexOf('chapter') < 0) {
+      const event = new Event('toggle-view')
+      window.dispatchEvent(event)
+    }
+    this.props.history.goBack()
+  }
+
   public render() {
     return (
       <div className="top-bar">
         <NavBar
           mode="dark"
-          leftContent={[
-            <Icon key="0" type="ellipsis" onClick={this.onOpenChange} />
+          leftContent={this.props.history.location.pathname === '/search-novel' ? [] : [
+            <Icon key="0" type="left" onClick={this.onOpenChange} />
           ]}
-          rightContent={[<Icon key="0" type="search" />]}
+          rightContent={[]}
         >
           Web App
         </NavBar>
-        <Drawer
-          className="app-menu"
-          style={{ minHeight: document.documentElement.clientHeight }}
-          enableDragHandle
-          sidebar={this.state.appList.map((info, i) => (
-            <List.Item key={i} onClick={() => this.menuJump(info.link)}>
-              {info.name}
-            </List.Item>
-          ))}
-          open={this.state.open}
-          onOpenChange={this.onOpenChange}
-        >
-          Hide Menu
-        </Drawer>
       </div>
     )
   }

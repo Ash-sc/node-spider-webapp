@@ -1,6 +1,6 @@
 import * as React from 'react'
 import NovelApi from '../../api/novel'
-import { ActivityIndicator, List, Icon, Flex } from 'antd-mobile'
+import { ActivityIndicator, List, Flex, Toast } from 'antd-mobile'
 import { withRouter } from 'react-router-dom'
 import { RouteComponentProps } from 'react-router'
 
@@ -25,6 +25,7 @@ type PropsType = RouteComponentProps<PathParamsType> & {}
 
 class NovelSearch extends React.Component<PropsType, any> {
   private contentRef = React.createRef<any>()
+  private toggleEvent:any
 
   constructor(props: PropsType) {
     super(props)
@@ -38,8 +39,9 @@ class NovelSearch extends React.Component<PropsType, any> {
       currentIndex: -1,
       content: '',
       transformHeight: 0,
-      currentTransformHeight: 0
+      currentTransformHeight: 0,
     }
+    this.toggleEvent = null
   }
 
   public componentDidMount() {
@@ -74,6 +76,14 @@ class NovelSearch extends React.Component<PropsType, any> {
     this.setState({
       transformHeight
     })
+
+    this.toggleEvent = window.addEventListener('toggle-view', () => {
+      this.backToChapter()
+    })
+  }
+
+  public componentWillUnmount() {
+    window.removeEventListener('toggle-view', this.toggleEvent)
   }
 
   // 返回章节列表
@@ -91,6 +101,7 @@ class NovelSearch extends React.Component<PropsType, any> {
 
   // 点击章节 查看内容
   public viewChapter = (href: string, i: number) => {
+    
     this.setState({
       loadingContent: true
     })
@@ -110,14 +121,16 @@ class NovelSearch extends React.Component<PropsType, any> {
         )
       },
       () => {
-        this.setState({ loadingContent: false, currentTransformHeight: 0 })
-        this.contentRef.current.style.transform = 'translateY(0)'
+        this.setState({ loadingContent: false })
+        Toast.fail('获取章节信息失败', 2)
+        // this.contentRef.current.style.transform = 'translateY(0)'
       }
     )
   }
 
   // 上一章  下一章
-  public changeContent = (type: number) => {
+  public changeContent = (type: number, event: Event) => {
+    event.stopPropagation()
     const { chapterList, currentIndex } = this.state
     const href = chapterList[currentIndex + type].href
     this.viewChapter(href, currentIndex + type)
@@ -156,14 +169,6 @@ class NovelSearch extends React.Component<PropsType, any> {
   public render() {
     return (
       <div className="novel-body">
-        {!this.state.loadingContent &&
-          this.state.currentView === 'content' && (
-            <Icon
-              type={'left'}
-              className="back-icon"
-              onClick={this.backToChapter}
-            />
-          )}
         {this.state.chapterList.length ? (
           <List
             renderHeader={() => this.state.novelName + '-- 章节列表'}
@@ -218,14 +223,14 @@ class NovelSearch extends React.Component<PropsType, any> {
             />
             <Flex className="chapter-jump">
               {this.state.currentIndex !== 0 && (
-                <Flex.Item onClick={() => this.changeContent(-1)}>
-                  上一章
+                <Flex.Item>
+                  <div className="jump-div" onClick={(e: any) => this.changeContent(-1, e)}>&lt;&nbsp;上一章</div>
                 </Flex.Item>
               )}
               {this.state.currentIndex !==
                 this.state.chapterList.length - 1 && (
-                <Flex.Item onClick={() => this.changeContent(1)}>
-                  下一章
+                <Flex.Item>
+                  <div className="jump-div" onClick={(e: any) => this.changeContent(1, e)}>下一章&nbsp;&gt;</div>
                 </Flex.Item>
               )}
             </Flex>

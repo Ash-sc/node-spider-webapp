@@ -15,7 +15,6 @@ class Main extends React.Component<MainProps> {
         <div className="content-body">
           {this.props.children}
         </div>
-        {/* <Footer /> */}
       </div>
     )
   }
