@@ -137,7 +137,7 @@ router.post('/get-chapter', async ctx => {
           let articleName = ''
           const chapterList = [] // 章节信息列表
           const $ = cheerio.load(resp.text)
-          if (link.indexOf('xxsa.net > 0')) {
+          if (link.indexOf('xxsa.net') > 0) {
             await new Promise(resolve2 => {
               const dirLinks = $('#diralinks').attr('href')
               articleName = $('.con_txt .info h1 a').text()
@@ -153,7 +153,7 @@ router.post('/get-chapter', async ctx => {
                       $$(element).find('dd').each((i, ele) => {
                         chapterList.push({
                           title: $$(ele).find('a').text(),
-                          href: dirLinks + $$(ele).find('a').attr('href'),
+                          href: 'http://www.xxsa.net' + $$(ele).find('a').attr('href'),
                         })
                       })
                     })
@@ -177,7 +177,7 @@ router.post('/get-chapter', async ctx => {
             data: {
               chapterList,
               name: articleName,
-              downloadLink: link.indexOf('xxsa.net > 0') ? ('http://www.xxsa.net/modules/article/txtarticle.php?id=' + $('#down_txt').attr('href').match(/\d+/gi)[0]) : ''
+              downloadLink: link.indexOf('xxsa.net') > 0 ? ('http://www.xxsa.net/modules/article/txtarticle.php?id=' + $('#down_txt').attr('href').match(/\d+/gi)[0]) : ''
             },
             errorInfo: ''
           })
@@ -207,17 +207,15 @@ router.post('/get-content', async ctx => {
         } else {
           console.info('get charter content success !')
           const $ = cheerio.load(resp.text)
-          if (href.indexOf('xxsa.net > 0')) {
 
-          } else {
-            
-          }
-          const content = unescape($($('#BookText')[0]).html()
+          const content = unescape(
+            (href.indexOf('xxsa.net') > 0 ? $($('#content')[0]) : $($('#BookText')[0]))
+              .html()
               .replace(/&#x/g, '%u')
               .replace(/;/g, '')
               .replace(/%uA0/g, ' ')
               .replace(/&apos/g, ''))
-            .replace(/%[0-9a-zA-Z]+/g, ''); // 内容处理
+              .replace(/%[0-9a-zA-Z]+/g, ''); // 内容处理
           return resolve({
             result: 0,
             data: content,

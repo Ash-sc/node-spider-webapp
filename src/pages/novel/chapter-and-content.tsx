@@ -110,7 +110,7 @@ class NovelSearch extends React.Component<PropsType, any> {
     this.setState({
       loadingContent: true
     })
-    NovelApi.getContent(this.state.articleLink + href).then(
+    NovelApi.getContent(href.startsWith('http') ? href : (this.state.articleLink + href)).then(
       data => {
         this.setState({
           loadingContent: false,
